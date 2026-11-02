@@ -1,0 +1,2199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pratinjau Latihan Mandiri · Rotasi dan Dilatasi</title>
+<link rel="stylesheet" id="katexCss" media="print" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.45/katex.min.css" integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script defer id="katexJs" src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.45/katex.min.js" integrity="sha384-Tt7wBxLKwSzFVRET4O4U9H6v8MNaQ/CjN2FMP4xFm0ErrFu6aNqoonRVW5W40iGI" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+/* ==========================================================================
+   gaya.css · Program Linear: dari Contoh Kontekstual ke Nilai Optimum
+   Urutan lapisan (yang lebih kanan menang):
+     dasar → komponen → tata-letak → tab → mode
+   - dasar      : warna (variabel), huruf, kepala halaman, tombol tab
+   - komponen   : kartu, tombol, tabel, isian, maskot Plus, rumus
+   - tata-letak : susunan kolom per tab dan tampilan ringkas di PC/laptop
+   - tab        : aturan khusus isi tab Belajar (penjelasan, garis selidik) dan isian soal
+   - mode       : perubahan yang hanya berlaku pada satu mode
+   ========================================================================== */
+@layer dasar, komponen, tata-letak, tab, mode;
+
+@layer dasar {
+:root{--ink:#1b2a41;--mut:#5b6b82;--bg:#eef3fb;--card:#fff;--blue:#1d4ed8;--green:#15803d;--red:#b91c1c;--amber:#b45309;--line:#d5deee}
+*{box-sizing:border-box}
+body{margin:0;font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+.wrap{max-width:1080px;margin:0 auto;padding:14px}
+header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+header h1{font-size:clamp(1.15rem,4.2vw,1.7rem);margin:0;line-height:1.25}
+header p{margin:0;color:var(--mut);font-size:.9rem}
+.tabs{display:flex;gap:6px;background:#dde6f5;padding:4px;border-radius:12px}
+.tab{border:0;background:transparent;font:inherit;font-weight:600;padding:9px 14px;border-radius:9px;color:var(--mut);cursor:pointer;min-height:44px}
+.tab.on{background:#fff;color:var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+[hidden]{display:none!important}
+
+}
+
+@layer komponen {
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.prob{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.prob small{color:var(--mut);display:block}
+.ineq{font-size:clamp(1.4rem,6vw,2rem);font-weight:700;letter-spacing:.02em}
+.prob-actions{display:flex;gap:8px;flex-wrap:wrap}
+ol.prog{list-style:none;display:flex;gap:4px;padding:0;margin:0 0 8px}
+ol.prog li{flex:1;text-align:center;font-size:.78rem;color:var(--mut)}
+ol.prog li span{display:grid;place-items:center;width:32px;height:32px;margin:0 auto 2px;border-radius:50%;background:#e4ebf7;font-weight:700;color:var(--mut)}
+ol.prog li.cur span{background:var(--blue);color:#fff}
+ol.prog li.cur{color:var(--blue);font-weight:700}
+ol.prog li.done span{background:var(--green);color:#fff}
+ol.prog em{font-style:normal;display:block}
+.steptext{margin:0;font-size:.9rem;color:var(--mut);text-align:center}
+h2{font-size:1.2rem;margin:0 0 8px}
+.muted{color:var(--mut);font-size:.95rem}
+.eq{display:inline-block;background:#eaf0ff;border-radius:8px;padding:0 8px;font-weight:700;white-space:nowrap}
+.note{background:#f6f9ff;border-left:4px solid var(--blue);padding:8px 12px;border-radius:8px;margin:10px 0}
+.note p{margin:.3em 0}
+.rule{background:#fff8e6;border:1px solid #f3dca0;border-radius:10px;padding:8px 12px;margin:10px 0;font-size:.97rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{font:inherit;font-weight:600;border:2px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;min-height:44px;cursor:pointer}
+.chip.on{border-color:var(--blue);background:#eaf0ff;color:var(--blue)}
+.btn{font:inherit;font-weight:700;border:2px solid var(--blue);background:#fff;color:var(--blue);border-radius:12px;padding:10px 18px;min-height:48px;cursor:pointer}
+.btn.primary{background:var(--blue);color:#fff}
+.btn.ghost{border-color:var(--line);color:var(--ink)}
+.btn:disabled,.segb:disabled{opacity:.55;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+table.tbl{border-collapse:collapse;margin:10px 0;width:100%;max-width:360px}
+.tbl th,.tbl td{border:1px solid var(--line);padding:8px;text-align:center;font-size:1.1rem}
+.tbl th{background:#eaf0ff}
+input.num{width:84px;font:inherit;font-size:1.15rem;text-align:center;padding:8px;border:2px solid var(--line);border-radius:10px;min-height:46px}
+input.num.ok{border-color:var(--green);background:#ecfdf3}
+input.num.bad{border-color:var(--red);background:#fef2f2}
+.xy{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:1.3rem;margin:8px 0}
+.xy input{width:76px}
+.seg{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.segb{font:inherit;font-weight:700;display:flex;align-items:center;gap:8px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;min-height:48px;cursor:pointer;color:var(--ink)}
+.segb.on{border-color:var(--blue);background:#eaf0ff;color:var(--blue)}
+.state{font-weight:600;margin:.4em 0}
+.hints{margin:10px 0 0;padding:8px 12px 8px 30px;background:#fff8e6;border:1px solid #f3dca0;border-radius:10px;font-size:.97rem}
+.hints[hidden],.fb[hidden]{display:none}
+.hints li{margin:.25em 0}
+.fb{margin-top:10px;padding:10px 12px;border-radius:10px;font-weight:500}
+.fb.ok{background:#ecfdf3;border:1px solid #9be0b8;color:#14532d}
+.fb.bad{background:#fef2f2;border:1px solid #f3b4b4;color:#7f1d1d}
+.fb.info{background:#eff6ff;border:1px solid #b6d0fb;color:#1e3a8a}
+.sub{background:#f6f9ff;border-radius:12px;padding:10px 12px;margin-top:10px}
+.sub p{margin:.35em 0}
+.calc{font-size:1.1rem;font-weight:600}
+.okc{color:var(--green)}.badc{color:var(--red)}
+ol.sum{padding-left:22px}
+ol.sum li{margin:.5em 0}
+.score{font-size:3rem;font-weight:800;color:var(--blue)}
+.score small{font-size:1.2rem;color:var(--mut)}
+.plane svg{width:100%;height:auto;display:block;border-radius:10px;touch-action:manipulation;cursor:pointer;background:#fff}
+.plane p{margin:6px 0 0;font-size:.85rem;color:var(--mut);text-align:center}
+.lbl{font:700 13px system-ui,sans-serif;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.tick{font:12px system-ui,sans-serif;fill:#44546a;paint-order:stroke;stroke:#fff;stroke-width:3px}
+.plane svg.drag{touch-action:none;cursor:grab}
+.relb{min-width:60px;padding:8px 12px;font-size:1.25rem}
+.sys{display:flex;align-items:center;gap:8px}
+.brace{font-size:3.2rem;font-weight:200;line-height:1;color:var(--mut);margin-right:2px}
+.srows{display:flex;flex-direction:column;gap:2px}
+.srow{display:flex;align-items:center;gap:8px;font-size:clamp(1.1rem,4.6vw,1.5rem);font-weight:700;padding:1px 10px;border-radius:8px}
+.srow i{width:12px;height:12px;border-radius:50%;flex:none}
+.srow.cur{background:#eaf0ff}
+.mini{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.mini span{font-size:.78rem;padding:3px 10px;border-radius:999px;background:#e4ebf7;color:var(--mut);font-weight:600}
+.mini span.cur{background:var(--blue);color:#fff}
+.mini span.dn{background:#dcf5e6;color:#14532d}
+.sub small{color:var(--mut);font-weight:500}
+.ask{margin:4px 0 8px;font-size:1rem}
+.lvl{margin:10px 0}
+.trow{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.trow.ok{background:#ecfdf3;border-color:#9be0b8}
+.trow.bad{background:#fef2f2;border-color:#f3b4b4}
+.trow .seg{margin:6px 0 0}
+.trow p{margin:.3em 0}
+.eqin{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:1.25rem;margin:10px 0}
+.eqin .num{width:84px}
+/* Latihan dan Kuis: pratinjau "Persamaanmu" di samping isian koefisien */
+.eqwrap{display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px}
+.eqwrap>.eqin{margin:10px 0}
+.pratinjau{display:flex;flex-direction:column;gap:2px;min-width:150px;padding:6px 12px;border:1px dashed var(--line);border-radius:10px;background:#f8fbff}
+.pratinjau small{font-size:.78rem;font-weight:700;color:var(--mut)}
+.pratinjau .pr-isi{font-size:1.2rem;color:var(--ink);white-space:nowrap}
+.trow.ok .pratinjau{border-style:solid;border-color:#9be0b8;background:#fff}
+.relb.sel{background:var(--blue);color:#fff}
+.relb:disabled.sel{opacity:.9}
+input.num.vin{width:96px}
+
+/* ===== Maskot Plus ===== */
+:root{--plus-w:90px}
+@media(min-width:860px){:root{--plus-w:120px}}
+body:not(.plus-off) .wrap{padding-bottom:calc(var(--plus-w)*.93 + 36px)}
+#plusWrap{position:fixed;right:8px;bottom:8px;z-index:50;display:flex;align-items:flex-end;gap:4px;pointer-events:none}
+body.plus-off #plusWrap{display:none}
+#plusBody{position:relative;width:var(--plus-w);flex:none}
+#plusBody svg{width:100%;height:auto;display:block;overflow:visible}
+#plusBubble{align-self:center;position:relative;max-width:min(190px,52vw);background:#fff;color:var(--ink);border:2px solid var(--blue);border-radius:14px;padding:7px 11px;font-weight:700;font-size:.86rem;line-height:1.3;box-shadow:0 2px 8px rgba(29,78,216,.18);opacity:0;visibility:hidden;transform:translateX(8px) scale(.92);transform-origin:right center;transition:opacity .25s,transform .25s,visibility 0s .25s}
+#plusBubble.show{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+#plusBubble::after{content:"";position:absolute;right:-8px;top:50%;width:12px;height:12px;background:#fff;border-right:2px solid var(--blue);border-top:2px solid var(--blue);transform:translateY(-50%) rotate(45deg)}
+@media(min-width:860px){#plusBubble{max-width:240px;font-size:.95rem}}
+#plusToggle{position:fixed;z-index:51;right:8px;bottom:calc(var(--plus-w)*.93 + 12px);width:36px;height:36px;border-radius:50%;border:2px solid var(--line);background:#fff;color:var(--mut);font:700 14px/1 system-ui,sans-serif;cursor:pointer;display:grid;place-items:center;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+body.plus-off #plusToggle{bottom:8px;width:auto;height:44px;border-radius:999px;padding:0 16px;border-color:var(--blue);color:var(--blue);font-size:.95rem}
+/* ekspresi */
+#plusWrap .eyeH,#plusWrap .mH,#plusWrap .mS,#plusWrap .brow{display:none}
+#plusWrap[data-mood=happy] .eye,#plusWrap[data-mood=happy] .mN,#plusWrap[data-mood=happy] .mS{display:none}
+#plusWrap[data-mood=happy] .eyeH,#plusWrap[data-mood=happy] .mH{display:inline}
+#plusWrap[data-mood=sad] .mN{display:none}
+#plusWrap[data-mood=sad] .mS,#plusWrap[data-mood=sad] .brow{display:inline}
+/* animasi */
+#plusChar{transform-origin:70px 72px;animation:plusFloat 3.2s ease-in-out infinite}
+#armL{transform-origin:30px 64px}
+#armR{transform-origin:110px 64px}
+.eye{transform-box:fill-box;transform-origin:center;animation:plusBlink 4.8s infinite}
+#plusWrap[data-act=wave] #armR{animation:plusWave 2.2s ease-in-out 1}
+#plusWrap[data-act=cheer] #plusChar{animation:plusJump 1s ease-out 1}
+#plusWrap[data-act=cheer] #armL{animation:plusUpL 1.4s ease-in-out 1}
+#plusWrap[data-act=cheer] #armR{animation:plusUpR 1.4s ease-in-out 1}
+#plusWrap[data-act=shake] #plusChar{animation:plusShake 1.1s ease-in-out 1}
+#plusWrap[data-act=point] #armL{animation:plusPoint 1.8s ease-in-out 1}
+#plusWrap[data-act=spin] #plusChar{animation:plusSpin 1.1s ease-in-out 1}
+#plusWrap[data-act=spin] #armL{animation:plusUpL 1.6s ease-in-out 1}
+#plusWrap[data-act=spin] #armR{animation:plusUpR 1.6s ease-in-out 1}
+@keyframes plusFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes plusBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes plusWave{0%{transform:rotate(0)}15%{transform:rotate(-100deg)}30%{transform:rotate(-124deg)}45%{transform:rotate(-96deg)}60%{transform:rotate(-124deg)}75%{transform:rotate(-96deg)}90%{transform:rotate(-100deg)}100%{transform:rotate(0)}}
+@keyframes plusUpL{0%{transform:rotate(0)}20%,80%{transform:rotate(105deg)}100%{transform:rotate(0)}}
+@keyframes plusUpR{0%{transform:rotate(0)}20%,80%{transform:rotate(-105deg)}100%{transform:rotate(0)}}
+@keyframes plusPoint{0%{transform:rotate(0)}20%{transform:rotate(75deg)}35%{transform:rotate(66deg)}50%{transform:rotate(78deg)}65%{transform:rotate(66deg)}85%{transform:rotate(75deg)}100%{transform:rotate(0)}}
+@keyframes plusJump{0%,100%{transform:translateY(0)}25%{transform:translateY(-22px)}50%{transform:translateY(0)}65%{transform:translateY(-9px)}80%{transform:translateY(0)}}
+@keyframes plusShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-5deg)}40%{transform:rotate(5deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(3deg)}}
+@keyframes plusSpin{0%{transform:translateY(0) rotate(0)}45%{transform:translateY(-16px) rotate(360deg)}100%{transform:translateY(0) rotate(360deg)}}
+/* konfeti */
+#plusConf{position:absolute;left:50%;top:45%;width:0;height:0;pointer-events:none}
+#plusConf i{position:absolute;width:7px;height:10px;border-radius:2px;animation:plusConf 1.5s ease-out forwards}
+@keyframes plusConf{0%{transform:translate(0,0) rotate(0);opacity:1}60%{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:1}100%{transform:translate(var(--dx),calc(var(--dy) + 50px)) rotate(var(--rot));opacity:0}}
+/* hormati prefers-reduced-motion: tanpa gerak, pose statis saja */
+@media (prefers-reduced-motion:reduce){
+  #plusChar,#armL,#armR,.eye,#plusConf i{animation:none!important}
+  #plusBubble{transition:none!important}
+  #plusWrap[data-act=wave] #armR,#plusWrap[data-act=cheer] #armR,#plusWrap[data-act=spin] #armR{transform:rotate(-105deg)}
+  #plusWrap[data-act=cheer] #armL,#plusWrap[data-act=spin] #armL{transform:rotate(105deg)}
+  #plusWrap[data-act=point] #armL{transform:rotate(75deg)}
+}
+
+
+.exbox{margin:8px 0;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#f8fafc}
+.exbox.why{border-color:#f3b5b5;background:#fff1f1}
+.exbox.fix{border-color:#a7dcb8;background:#effaf2}
+table.ext{width:100%;border-collapse:collapse;font-size:.93rem;margin:6px 0}
+table.ext th,table.ext td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+table.ext th{background:#e8f0fb}
+.panel .exl .eq,.panel p.eq,.ans{white-space:normal;overflow-wrap:anywhere}
+@media (max-height:559px){#exFloat .exfpos{display:none}}
+/* ===== Rumus persamaan garis (KaTeX): hanya berlaku setelah rumus dirender ===== */
+[data-tex]>.katex{font-size:1.1em;line-height:1.2;white-space:nowrap}
+.eq[data-tex]:has(>.katex){max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle;padding-top:3px;padding-bottom:3px;-webkit-overflow-scrolling:touch}
+span[data-tex]:not(.eq):has(>.katex){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle;padding:2px 0}
+.panel p.eq[data-tex]:has(>.katex){white-space:nowrap}
+.sol:has(.katex){min-height:44px}
+}
+
+@layer tata-letak {
+.layout{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:860px){.layout{grid-template-columns:minmax(340px,1fr) minmax(380px,520px);align-items:start}.plane{position:sticky;top:10px}}
+@media (max-width:859px){.layout>*{min-width:0}}
+/* ===== Tampilan ringkas PC/laptop: satu layar, tanpa gulir halaman ===== */
+@media (min-width:860px) and (min-height:500px){
+  body{--res:calc(var(--plus-w)*.93 + 50px);--ps:clamp(300px,min(calc(100vh - 88px - var(--res)),calc(100vw - 480px)),640px)}
+  body.plus-off{--res:0px}
+  html,body{height:100%}
+  body{overflow:hidden;font-size:15px;line-height:1.45}
+  body .wrap,body:not(.plus-off) .wrap{height:100vh;max-width:1320px;padding:8px 14px;display:flex;flex-direction:column}
+  header{margin:0 0 6px;gap:6px}
+  header>div{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  header h1{font-size:1.15rem}
+  header p{font-size:.82rem}
+  .tabs{padding:3px}
+  .tab{min-height:34px;padding:4px 12px}
+  main{flex:1;min-height:0}
+  /* setiap tab: kolom kiri (kartu, progres, panel) dan kolom kanan (bidang) */
+  .tab-view{height:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto minmax(0,1fr);column-gap:12px}
+  .tab-view>.kartu{grid-column:1;grid-row:1}
+  .tab-view>.progres{grid-column:1;grid-row:2}
+  .tab-view .layout{display:contents}
+  .tab-view .panel{grid-column:1;grid-row:3;overflow:auto;min-height:0;margin-bottom:0}
+  .tab-view .plane{grid-column:2;grid-row:1/4;align-self:start;position:static;padding:8px;margin:0}
+  .plane svg{width:var(--ps);height:var(--ps)}
+  .plane p{display:none}
+  .card{padding:10px 14px;margin-bottom:6px;border-radius:12px}
+  .prob{flex-wrap:nowrap;gap:12px;align-items:center}
+  .prob>div:first-child{flex:1;min-width:0}
+  .prob-actions{flex-direction:column;gap:4px}
+  .prob-actions .btn{min-height:32px;padding:3px 10px;font-size:.82rem;border-radius:9px}
+  .progres{padding:4px 10px}
+  ol.prog{margin:0}
+  ol.prog li{font-size:.72rem}
+  ol.prog li span{width:24px;height:24px;font-size:.78rem}
+  .steptext{display:none}
+  .panel h2{font-size:1.05rem;margin:0 0 2px}
+  .panel p{margin:.25em 0}
+  .btn{min-height:38px;padding:5px 14px;border-radius:10px}
+  .chip{min-height:32px;padding:3px 12px}
+  .segb{min-height:36px;padding:2px 12px}
+  .relb{min-width:48px;min-height:34px;padding:2px 10px;font-size:1.1rem}
+  input.num{min-height:38px;padding:4px;font-size:1.05rem}
+  input.num.vin{width:84px}
+  .eqin .num{width:72px}
+  .row{margin-top:8px}
+  .note{margin:6px 0;padding:4px 10px}
+  .rule{margin:6px 0;padding:5px 10px;font-size:.9rem}
+  .chips{margin:4px 0;gap:6px}
+  .lvl{margin:4px 0;display:flex;align-items:center;gap:10px}
+  .lvl>b{flex:0 0 150px}
+  .lvl .chips{margin:0}
+  .mini{margin:0 0 6px}
+  .hints{margin:4px 0 0;padding:5px 10px 5px 26px;font-size:.85rem}
+  .fb{margin-top:6px;padding:5px 10px;line-height:1.35}
+  .trow{padding:6px 10px;margin:4px 0}
+  .eqin,.xy{margin:6px 0;font-size:1.1rem}
+  .seg{margin:6px 0}
+  .calc{font-size:1rem}
+  .score{font-size:2.4rem}
+  ol.sum li{margin:.3em 0}
+  .trow:has(.seg),.trow:has(.opb){display:flex;align-items:center;justify-content:space-between;gap:6px 14px;flex-wrap:wrap}
+  .trow:has(.seg)>.seg{margin:0}
+  .trow:has(.opb)>p{margin:0;font-size:.85rem}
+}
+@media (min-width:860px) and (max-height:720px){:root{--plus-w:100px}}
+}
+
+@layer tab {
+.whereBox{margin-top:6px}
+#whereTxt{display:block;margin-top:4px;font-weight:600}
+#plusFx{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:49;pointer-events:none;overflow:visible}
+#plusFx .ring{fill:rgba(245,158,11,.14);stroke:#f59e0b;stroke-width:4;animation:fxPulse 1.4s ease-in-out infinite}
+@keyframes fxPulse{50%{stroke-opacity:.45}}
+#plusFx .beam{stroke:#f59e0b;stroke-width:3;stroke-dasharray:7 6;fill:none;marker-end:url(#fxArr)}
+#plusWrap.go{transition:transform .65s cubic-bezier(.4,0,.2,1)}
+#plusWrap[data-side=r]{flex-direction:row-reverse}
+#plusWrap[data-side=r] #plusBubble{transform-origin:left center}
+#plusWrap[data-side=r] #plusBubble::after{right:auto;left:-8px;border-right:0;border-top:0;border-left:2px solid var(--blue);border-bottom:2px solid var(--blue)}
+@media(prefers-reduced-motion:reduce){#plusWrap.go{transition:none!important}#plusFx .ring{animation:none}}
+
+/* ===== Tab Belajar: tombol Sebelumnya / Berikutnya / Ulangi melayang di perangkat kecil ===== */
+#exFloat{display:contents}
+#exFloat .exfpos{display:none}
+@media not all and (min-width:860px) and (min-height:500px){
+  .exempty{margin:0;padding:0;height:0;min-height:0;border:0}
+  body.ex-bar:not(.plus-off) .wrap{padding-bottom:calc(var(--plus-w)*.93 + 36px + var(--exbar-h,0px))}
+  body.ex-bar.plus-off .wrap{padding-bottom:calc(64px + var(--exbar-h,0px))}
+  body.ex-bar #plusWrap{bottom:calc(8px + var(--exbar-h,0px))}
+  body.ex-bar #plusToggle{bottom:calc(var(--plus-w)*.93 + 12px + var(--exbar-h,0px))}
+  body.ex-bar.plus-off #plusToggle{bottom:calc(8px + var(--exbar-h,0px))}
+  #exFloat{position:fixed;left:0;right:0;bottom:0;z-index:48;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) auto;grid-template-areas:"pos pos pos" "prev next again";gap:4px 8px;align-items:stretch;padding:6px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(255,255,255,.98);border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(27,42,65,.16)}
+  #exFloat .exfpos{grid-area:pos;display:block;text-align:center;font-size:.76rem;line-height:1.1;color:var(--mut)}
+  #exFloat #exPrev{grid-area:prev}
+  #exFloat #exNext{grid-area:next}
+  #exFloat #exAgain{grid-area:again}
+  #exFloat .btn{min-height:48px;min-width:48px;margin:0;padding:6px 10px;font-size:.92rem;white-space:nowrap;touch-action:manipulation}
+}
+@media (max-width:379px){#exFloat .btn{padding:6px 7px;font-size:.84rem}}
+@media (max-width:339px){#exFloat{gap:4px 6px;padding-left:6px;padding-right:6px}#exFloat .btn{padding:6px 4px;font-size:.78rem}}
+/* kolom tunggal tidak boleh melebar oleh isi (menu topik) di layar sempit */
+@media (max-width:859px){.layout>*{min-width:0}}
+@media (max-width:359px){.panel table td,.panel table th{padding:4px 5px;font-size:.84rem;overflow-wrap:anywhere}}
+/* tiga tab (Belajar, Latihan Mandiri, Kuis) harus muat di layar sempit */
+@media (max-width:359px){.tabs{max-width:100%}.tab{padding:9px 8px;font-size:.88rem}}
+@media (max-width:399px){#exFloat #exAgain .lb{display:none}}
+
+/* ===== Tambahan untuk media Program Linear ===== */
+h3{font-size:1.02rem;margin:10px 0 4px}
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:520px){.dd{grid-template-columns:1fr}}
+.dd .exbox{margin:4px 0}
+.exstep{margin:6px 0;padding:6px 10px;border-left:4px solid var(--blue);background:#f6f9ff;border-radius:8px}
+.exbox ul.exl,.exbox ol.exl{margin:4px 0}
+table.elim{border-collapse:collapse;margin:6px 0;font-weight:600}
+table.elim td{padding:1px 8px;text-align:right;white-space:nowrap}
+table.elim td:first-child{text-align:center;color:var(--mut);width:18px}
+table.elim tr.hasil td:nth-child(2){border-top:2px solid var(--ink)}
+.tscroll{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.ext tr.tpt{cursor:pointer}
+table.ext tr.tpt:hover td{background:#f6f9ff}
+table.ext tr.tpt.hit td{background:#fff3c4}
+details{margin-top:6px}
+details summary{cursor:pointer;font-weight:700;color:var(--blue);min-height:32px;display:flex;align-items:center}
+.gsbox{margin:8px 0;padding:8px 12px;border:1px solid #f3dca0;background:#fffbeb;border-radius:10px}
+.gsbox label{display:block}
+input.gsr{width:100%;min-height:36px;accent-color:#f59e0b}
+.nrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px}
+.nin{white-space:nowrap;font-weight:700}
+input.num.rpin{width:150px}
+table.ftbl{max-width:420px}
+table.ftbl td:first-child{font-weight:600;font-size:1rem}
+table.ftbl tr.ok td{background:#ecfdf3}
+table.ftbl tr.bad td{background:#fef2f2}
+.sols .sol.on{border-color:var(--blue);background:#eaf0ff;color:var(--blue)}
+.sols .sol:disabled{cursor:default}
+.trow.bad .sol.on{border-color:var(--red);background:#fee2e2;color:#7f1d1d}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:6px 0;min-height:32px;cursor:pointer}
+.chk input{width:20px;height:20px;margin-top:3px;flex:none}
+table.rinci{max-width:420px}
+table.rinci td,table.rinci th{font-size:.95rem;text-align:left}
+.plane svg.pickable{cursor:crosshair}
+.eqin i{font-family:Georgia,serif}
+.ask{max-height:9.5em;overflow:auto}
+@media (min-width:860px) and (min-height:500px){
+  .ask{max-height:6.2em}
+  
+  .sys{display:none}
+  .exstep{margin:4px 0;padding:4px 10px}
+  .dd{gap:6px}
+  .gsbox{margin:6px 0;padding:4px 10px}
+  .nrow{font-size:.95rem}
+}
+@media (min-width:860px) and (min-height:500px){
+  .panel #exNav{position:sticky;bottom:-10px;margin:6px -14px -10px;padding:6px 14px 8px;background:rgba(255,255,255,.97);border-top:1px solid var(--line);z-index:3}
+}
+table.txy{width:auto;max-width:100%;margin:6px 0;border-collapse:collapse}
+table.txy caption{font-weight:700;text-align:left;font-size:.92rem;padding:0 0 2px}
+table.txy th,table.txy td{min-width:52px;padding:4px 10px;text-align:center}
+table.txy th{background:#eaf0ff}
+table.txy input.num{width:76px}
+.dd table.txy{margin:2px 0}
+.lkh{display:inline-block;background:var(--blue);color:#fff;border-radius:6px;padding:0 7px;font-size:.85em;margin-right:4px}
+
+}
+
+@layer mode {
+/* ===== Lapisan MODE: perubahan yang hanya berlaku pada satu mode =====
+   <body data-mode="belajar|latihan|kuis"> diatur oleh main.js.
+   Tab Kuis juga memakai <section id="tab-kuis" data-tahap="masuk|kerja|hasil">,
+   tab Latihan memakai data-tahap="intro|kerja|selesai".
+   Tambahkan aturan baru di sini; lapisan ini selalu menang atas lapisan lain. */
+
+/* Kuis: kartu soal dan progres hanya tampil saat mengerjakan */
+#tab-kuis:not([data-tahap="kerja"]) :is(.kartu,.progres){display:none}
+/* Latihan: tombol "Ulangi" di kartu soal tidak berguna sebelum mulai */
+#tab-latihan[data-tahap="intro"] .kartu [data-aksi="ulangi"]{display:none}
+/* Halaman materi (index.html) tidak menautkan ke kuis.html: guru membagikan tautan kuis sendiri.
+   Hapus baris di bawah ini bila tombol "Kuis ➜" di Latihan Mandiri ingin ditampilkan lagi. */
+body[data-halaman="materi"] [data-aksi="ke-kuis"]{display:none}
+/* Kuis: tanda kecil bahwa jawaban dinilai (warna aksen kuning) */
+body[data-mode="kuis"] .tab-view .kartu{border-left:4px solid var(--amber)}
+
+/* Contoh lain (aktifkan dengan menghapus tanda komentar):
+body[data-mode="belajar"] .plane{background:#fbfdff}
+body[data-mode="latihan"] .hints{font-size:1rem}
+body[data-mode="kuis"] #plusWrap{display:none}
+*/
+}
+
+/* ---------- Pembahasan saat "🔑 Lihat jawaban" (tab Latihan) ----------
+   Tempel di bagian paling bawah css/gaya.css. */
+.fb.kunci .kb-judul{font-weight:700;margin:.75rem 0 .3rem}
+.fb.kunci .kb-judul:first-child{margin-top:0}
+.fb.kunci .kb-gulir{overflow-x:auto;max-width:100%}
+.fb.kunci .kb-tbl{border-collapse:collapse;margin:.2rem 0 .4rem}
+.fb.kunci .kb-tbl th,.fb.kunci .kb-tbl td{text-align:left;vertical-align:top;padding:.3rem .55rem}
+.fb.kunci .kb-xy{border-collapse:collapse;margin:.2rem 0 .4rem}
+.fb.kunci .kb-xy th,.fb.kunci .kb-xy td{text-align:center;padding:.3rem .7rem}
+.fb.kunci .kb-benar{color:#15803d;font-weight:700}
+.fb.kunci .kb-salah{color:#b91c1c;text-decoration:line-through;text-decoration-thickness:2px}
+.fb.kunci ul,.fb.kunci ol{margin:.2rem 0 .4rem 1.25rem;padding:0}
+.fb.kunci li{margin:.25rem 0;line-height:1.5}
+.fb.kunci .kb-tutup{margin:.6rem 0 0;font-style:italic}
+/* ---------- memperbaiki tampilan tabel ----------
+   Tempel di bagian paling bawah css/gaya.css. */
+.hints li.rinci{border-left:3px solid #f59e0b;padding-left:.5em}
+.hints .xy-hint{margin:.35em 0}
+.hints .xy-mini{display:inline-table;margin:.25em 0 0 .5em;font-size:.9em}
+.hints li.lama summary{cursor:pointer;color:#475569;font-size:.92em;list-style-position:inside}
+.hints li.lama .isi{margin:.3em 0 .2em 1.2em}
+
+/* chip yang tidak tersedia (mis. LOTS untuk Tipe 2 di Latihan) */
+.chip:disabled{opacity:.4;cursor:not-allowed}
+
+/* Latihan: penyelesaian bertahap (rumus dua titik, substitusi, eliminasi) setelah benar / lihat jawaban */
+.penyelesaian{margin:10px 0 0;padding:8px 12px;border:1px solid #bfd3ff;border-left:4px solid var(--blue);border-radius:10px;background:#f5f8ff}
+.penyelesaian>b{display:block;margin-bottom:2px}
+.py-blok{margin:.45em 0 0}
+.py-blok>p{margin:0 0 .2em;font-size:.92rem;font-weight:600;color:var(--mut)}
+.py-tex{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:2px 0;line-height:1.6}
+.py-tex>.katex{white-space:nowrap}
+
+/* ---------- Kritik & Saran (tombol di samping tab Latihan Mandiri) ---------- */
+.tab.tab-saran{color:var(--ink);background:#fff7e6;border:1px dashed #f3c76b}
+.tab.tab-saran:hover{background:#ffefcc}
+.dlg-saran{width:min(520px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--line);border-radius:16px;padding:0;color:var(--ink);background:var(--card);box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.dlg-saran::backdrop{background:rgba(15,23,42,.45)}
+.saran-form{display:flex;flex-direction:column;gap:6px;padding:16px 18px}
+.saran-form h2{margin:0 0 2px;font-size:1.25rem}
+.saran-form p{margin:0 0 4px}
+.saran-form label{margin-top:6px}
+.saran-form input[type=text],.saran-form textarea{font:inherit;width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.saran-form textarea{resize:vertical;min-height:120px}
+.saran-form input:focus,.saran-form textarea:focus{outline:none;border-color:var(--blue)}
+.saran-sisa{font-size:.82rem;text-align:right;min-height:1em}
+.saran-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.saran-status{padding:8px 12px;border-radius:10px;background:#f6f9ff;font-weight:600}
+.saran-status.ok{background:#e9f9ef;color:var(--green)}
+.saran-status.bad{background:#fdecec;color:var(--red)}
+.saran-aksi{justify-content:flex-end;gap:8px;margin-top:6px}
+.saran-uji{font-size:.82rem;margin-top:4px}
+
+/* ===== Tambahan media Transformasi Geometri ===== */
+@layer komponen {
+/* pasangan koordinat ( x , y ) */
+.trow.koor{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
+.trow.koor .klab{font-weight:700;min-width:5.5em}
+.kin{display:inline-flex;align-items:center;gap:4px;font-size:1.35rem;font-weight:600}
+.kin .kur{font-size:1.9rem;font-weight:300;color:var(--mut);line-height:1}
+.kin .kom{margin:0 2px 0 -1px}
+.kin input.num{width:76px}
+.trow.ok,.trow.koor.ok{border-color:var(--green);background:#f3fbf6}
+.trow.bad{border-color:var(--red)}
+.sat{color:var(--mut);font-weight:600}
+/* pemilih tipe soal di Latihan */
+.pilih-tipe{display:block;width:100%;max-width:100%;margin:8px 0;font:inherit;font-size:1rem;padding:10px 12px;min-height:48px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+.pilih-tipe:focus-visible{outline:3px solid #93b4ff;outline-offset:2px}
+.segb{text-align:left}
+}
+@layer tata-letak {
+@media (min-width:860px){
+  .lvl>label{flex:0 0 150px}
+  .lvl .pilih-tipe{flex:1;margin:0}
+}
+}
+@layer mode {
+  /* soal cerita konteks Bone lebih panjang */
+  .ask{max-height:15em}
+}
+
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+</style>
+</head>
+<body data-mode="latihan" data-halaman="materi">
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Transformasi Geometri: Rotasi dan Dilatasi</h1>
+      <p>Matematika · Kelas IX · Fase D · Pratinjau tab Latihan Mandiri</p>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab on" id="tombol-latihan" role="tab" data-tab="latihan" aria-selected="true">Latihan Mandiri</button>
+    </div>
+  </header>
+  <main>
+  <section id="tab-latihan" class="tab-view" data-tab="latihan" role="tabpanel" aria-labelledby="tombol-latihan">
+    <div class="card kartu">
+      <div class="prob">
+        <div><small class="meta"></small><div class="ask"></div></div>
+        <div class="prob-actions">
+          <button class="btn ghost" data-aksi="ulangi">↺ Ulangi</button>
+          <button class="btn ghost" data-aksi="acak">🎲 Acak</button>
+        </div>
+      </div>
+    </div>
+    <div class="card progres"><ol class="prog"></ol><p class="steptext"></p></div>
+    <div class="layout">
+      <div class="card panel"></div>
+      <div class="card plane">
+        <svg id="bidang-latihan" class="bidang" viewBox="0 0 460 460" role="img" aria-label="Bidang koordinat"></svg>
+        <p class="cap"></p>
+      </div>
+    </div>
+  </section>
+  </main>
+</div>
+<script>
+/* ================= PENGATURAN (diisi guru) =================
+   ENDPOINT       : alamat Web App Apps Script untuk KUIS (proyek dengan Code.gs + core.gs),
+                    berakhiran /exec. Kosong = MODE UJI: kuis tetap bisa dikerjakan,
+                    tetapi skor TIDAK disetor ke mana pun.
+   SARAN_ENDPOINT : alamat Web App Apps Script untuk KRITIK & SARAN (proyek Saran.gs,
+                    terpisah dari kuis), berakhiran /exec. Kosong = MODE UJI: form tampil,
+                    tetapi isinya tidak dikirim.
+   MATERI         : jangan diubah ("transformasi").                          */
+window.OPTIMUM_CONFIG={ENDPOINT:"",SARAN_ENDPOINT:"",MATERI:"transformasi"};
+
+</script>
+<script>
+/* core.js · CORE BERSAMA — dipakai halaman siswa DAN ditempel utuh ke file core.gs di Apps Script. Jangan disunting sebagian; setelah mengubahnya, tempel ulang seluruh isi ke core.gs. */
+/* ============================================================
+   CORE BERSAMA · TRANSFORMASI GEOMETRI: ROTASI DAN DILATASI
+   Pembangkit soal (24 tipe) dan penilai. Dipakai persis sama oleh
+   halaman siswa dan server. Server menolak halaman yang "cek"-nya
+   berbeda.
+   Bentuk langkah: 'form' (isian pg / num / eq), 'pt' (klik satu titik),
+   'pts' (klik beberapa titik). Tampilan bidang tiap langkah ada di St.v:
+     {mk:[titik], poly:[bangun], seg:[ruas], arc:busur, circ:lingkaran,
+      ln:[garis], ctr:pusat, cap:keterangan}
+   Kode warna: 'a' asal (biru), 'b' bayangan (jingga), 'm' antara (ungu),
+               'k' hitam, 'g' hijau.
+   ============================================================ */
+var CORE=(function(){
+'use strict';
+var VERSI='2026-11-02.1';
+var OPS=['<','≤','>','≥'];
+var MAKS_COBA=2;           /* percobaan per langkah di Kuis: benar ke-1 = 2 poin, ke-2 = 1 poin, salah dua kali = 0 */
+var NSOAL=12,NLANGKAH=6;   /* NLANGKAH = banyak langkah paling banyak per soal (Tipe 15) */
+var TIPE={
+  1:'Rotasi titik 90°',2:'Rotasi titik 180°',3:'Rotasi 90° searah jarum jam',4:'Rotasi segitiga',
+  5:'Menentukan sudut rotasi',6:'Mencari titik asal',7:'Rotasi dengan pusat P(a, b)',
+  8:'Dilatasi, k bulat positif',9:'Dilatasi, k pecahan',10:'Dilatasi, k negatif',11:'Menentukan faktor skala',
+  12:'Dilatasi bangun dan luas',13:'Foto diperbesar',14:'Dilatasi dengan pusat P(a, b)',
+  15:'Rotasi garis, metode dua titik',16:'Rotasi garis, metode substitusi',17:'Rotasi garis 180°',
+  18:'Dilatasi garis, k positif',19:'Dilatasi garis, k negatif/pecahan',
+  20:'Bianglala pasar malam Watampone',21:"Motif garis lipa' sabbe",22:'Denah dermaga Pelabuhan Bajoe',
+  23:'Jalan Watampone–Bajoe pada peta',24:'Komposisi rotasi dan dilatasi'
+};
+var LEVEL={L:'LOTS',M:'MOTS',H:'HOTS'};
+/* level yang tersedia untuk setiap tipe */
+var LV_TIPE={1:'L',2:'L',3:'M',4:'M',5:'H',6:'H',7:'H',8:'L',9:'L',10:'M',11:'M',12:'M',13:'M',14:'H',
+  15:'M',16:'H',17:'MH',18:'M',19:'H',20:'M',21:'H',22:'M',23:'H',24:'H'};
+/* bagian materi (rincian skor) */
+var BAGIAN={ROT:'Rotasi',DIL:'Dilatasi',GRS:'Persamaan garis',BONE:'Konteks Bone',KOMP:'Komposisi'};
+var BG_TIPE={1:'ROT',2:'ROT',3:'ROT',4:'ROT',5:'ROT',6:'ROT',7:'ROT',8:'DIL',9:'DIL',10:'DIL',11:'DIL',12:'DIL',
+  13:'BONE',14:'DIL',15:'GRS',16:'GRS',17:'GRS',18:'GRS',19:'GRS',20:'BONE',21:'BONE',22:'BONE',23:'BONE',24:'KOMP'};
+var RINCI=['ROT','DIL','GRS','BONE','KOMP','LOTS','MOTS','HOTS'];
+var RLAB={ROT:'Rotasi (Tipe 1–7)',DIL:'Dilatasi (Tipe 8–12, 14)',GRS:'Persamaan garis (Tipe 15–19)',
+  BONE:'Konteks Bone (Tipe 13, 20–23)',KOMP:'Komposisi (Tipe 24)',LOTS:'LOTS',MOTS:'MOTS',HOTS:'HOTS'};
+var FULL={x0:-10,y0:-10,x1:10,y1:10,g:1,lb:2};
+
+var isNum=function(v){return typeof v==='number'&&isFinite(v);};
+var isInt=function(v){return isNum(v)&&Math.floor(v)===v;};
+var gcd=function(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;};
+var holds=function(v,c,op){return op==='<'?v<c:op==='≤'?v<=c:op==='>'?v>c:op==='≥'?v>=c:v===c;};
+var isSolid=function(op){return op!=='<'&&op!=='>';};
+var flipOp=function(op){return op==='<'?'>':op==='>'?'<':op==='≤'?'≥':op==='≥'?'≤':op;};
+function rnd(v){var r=Math.round(v*1e9)/1e9;return r===0?0:r;}
+
+/* ---------- bilangan acak berbenih ---------- */
+function mulberry32(seed){
+  var a=seed>>>0;
+  return function(){
+    a=(a+0x6D2B79F5)>>>0;
+    var t=a;
+    t=Math.imul(t^(t>>>15),t|1);
+    t^=t+Math.imul(t^(t>>>7),t|61);
+    return((t^(t>>>14))>>>0)/4294967296;
+  };
+}
+function ri(rng,a,b){return Math.floor(rng()*(b-a+1))+a;}
+function pick(rng,arr){return arr[Math.floor(rng()*arr.length)];}
+function shuffle(arr,rng){
+  for(var i=arr.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}
+  return arr;
+}
+/* bilangan bulat acak dari [a, b] selain 0 */
+function rnz(rng,a,b){var v=0;while(v===0)v=ri(rng,a,b);return v;}
+function sgn(rng){return rng()<0.5?-1:1;}
+
+/* ---------- penulisan bilangan dan bentuk aljabar ---------- */
+function ribu(s){return s.replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+var PECAHAN={'0.5':'½','0.333':'⅓','0.667':'⅔','0.25':'¼','0.75':'¾','0.111':'1/9','0.2':'⅕'};
+/* bilangan: bulat → 1.250; pecahan biasa < 1 → ½, ⅓, ¼; lainnya → desimal berkoma (2,5) */
+function nm(v){
+  v=rnd(v);
+  var s=v<0?'−':'',a=Math.abs(v);
+  if(isInt(a))return s+ribu(String(a));
+  var k=(Math.round(a*1000)/1000).toString();
+  if(a<1&&PECAHAN[k])return s+PECAHAN[k];
+  return s+String(Math.round(a*1000)/1000).replace('.',',');
+}
+function rp(v){return (v<0?'−':'')+'Rp'+ribu(String(Math.abs(v)));}
+function ptS(p){return '('+nm(p.x)+', '+nm(p.y)+')';}
+/* jumlah suku [[koefisien, peubah], …]; peubah '' = konstanta */
+function sum(su){
+  var t='';
+  su.forEach(function(x){
+    var c=rnd(x[0]),v=x[1];if(!c)return;
+    var m=Math.abs(c),badan=v?(m===1?'':nm(m))+v:nm(m);
+    t+=t===''?(c<0?'−':'')+badan:(c<0?' − ':' + ')+badan;
+  });
+  return t===''?'0':t;
+}
+function lin(a,b){return sum([[a,'x'],[b,'y']]);}
+function eqS(q){return lin(q.a,q.b)+' = '+nm(q.c);}
+function ineqS(q){return lin(q.a,q.b)+' '+q.op+' '+nm(q.c);}
+/* ax + by + c = 0 */
+function zeroS(a,b,c){return sum([[a,'x'],[b,'y'],[c,'']])+' = 0';}
+/* y = mx + n */
+function ymS(m,n){return 'y = '+sum([[m,'x'],[n,'']]);}
+function L(a,b,c,op){return {a:a,b:b,c:c,op:op||'='};}
+/* garis disederhanakan: FPB = 1, koefisien x positif */
+function norm(a,b,c){var g=gcd(gcd(a,b),c)||1;a/=g;b/=g;c/=g;if(a<0||(a===0&&b<0)){a=-a;b=-b;c=-c;}return L(a+0,b+0,c+0);}
+
+/* ---------- transformasi ---------- */
+var O0={x:0,y:0};
+function P2(x,y){return {x:rnd(x),y:rnd(y)};}
+function rot(P,d,C){
+  C=C||O0;d=((d%360)+360)%360;var x=P.x-C.x,y=P.y-C.y,r;
+  if(d===90)r=[-y,x];else if(d===180)r=[-x,-y];else if(d===270)r=[y,-x];else r=[x,y];
+  return P2(r[0]+C.x,r[1]+C.y);
+}
+function dil(P,k,C){C=C||O0;return P2(C.x+k*(P.x-C.x),C.y+k*(P.y-C.y));}
+/* garis ax + by = c dirotasi atau didilatasi dengan pusat O */
+function rotLn(q,d){d=((d%360)+360)%360;return d===90?L(-q.b,q.a,q.c):d===180?L(q.a,q.b,-q.c):d===270?L(q.b,-q.a,q.c):L(q.a,q.b,q.c);}
+function dilLn(q,k){return L(q.a,q.b,rnd(k*q.c));}
+var ATURAN={90:'(−y, x)',180:'(−x, −y)',270:'(y, −x)'};
+var HUBUNGAN={90:'x′ = −y dan y′ = x',180:'x′ = −x dan y′ = −y',270:'x′ = y dan y′ = −x'};
+var SUBST={90:'x = y′, y = −x′',180:'x = −x′, y = −y′',270:'x = −y′, y = x′'};
+function degS(d){return nm(d)+'°';}
+
+/* ---------- penilaian satu langkah ---------- */
+function propEq(k,a,b,c){
+  if(!isNum(a)||!isNum(b)||!isNum(c)||(a===0&&b===0))return false;
+  var e=1e-9;
+  return Math.abs(k.a*b-a*k.b)<e&&Math.abs(k.a*c-a*k.c)<e&&Math.abs(k.b*c-b*k.c)<e;
+}
+function judgeItem(it,a){
+  if(it.t==='pg')return a===it.key;
+  if(it.t==='num')return isNum(a)&&Math.abs(a-it.key)<1e-6;
+  if(it.t==='eq')return Array.isArray(a)&&a.length===3&&propEq(it.key,a[0],a[1],a[2]);
+  return false;
+}
+function validItem(it,a){
+  if(it.t==='pg')return isInt(a)&&a>=0&&a<it.o.length;
+  if(it.t==='num')return isNum(a)&&Math.abs(a)<1e9;
+  if(it.t==='eq')return Array.isArray(a)&&a.length===3&&a.every(function(v){return isNum(v)&&Math.abs(v)<1e9;});
+  return false;
+}
+function inBox(p,B){return !!p&&typeof p==='object'&&isInt(p.x)&&isInt(p.y)&&p.x>=B.x0&&p.x<=B.x1&&p.y>=B.y0&&p.y<=B.y1;}
+function samePt(p,q){return p.x===q.x&&p.y===q.y;}
+function uniq(arr){var o=[];arr.forEach(function(p){if(!o.some(function(r){return samePt(r,p);}))o.push(p);});return o;}
+/* jawaban mentah sah? (jika tidak, peristiwa diabaikan dan tidak dihitung sebagai percobaan) */
+function valid(Q,s,a){
+  var S=Q.st[s];if(!S)return false;
+  if(S.k==='form')return Array.isArray(a)&&a.length===S.it.length&&S.it.every(function(it,i){return validItem(it,a[i]);});
+  if(S.k==='pt')return inBox(a,Q.pl);
+  if(S.k==='pts'){
+    if(!Array.isArray(a)||a.length<1||a.length>16)return false;
+    if(!a.every(function(p){return inBox(p,Q.pl);}))return false;
+    return uniq(a.slice()).length===a.length;
+  }
+  return false;
+}
+function judgePt(c,p){return c.k==='at'&&c.p.some(function(q){return samePt(q,p);});}
+/* hasil: {ok, items:[bool]} untuk form; {ok} untuk pt; {ok, kurang, lebih} untuk pts */
+function judge(Q,s,a){
+  var S=Q.st[s];
+  if(S.k==='form'){var r=S.it.map(function(it,i){return judgeItem(it,a[i]);});return {ok:r.every(Boolean),items:r};}
+  if(S.k==='pt')return {ok:judgePt(S.cond,a)};
+  var kurang=S.key.filter(function(p){return !a.some(function(q){return samePt(p,q);});});
+  var lebih=a.filter(function(p){return !S.key.some(function(q){return samePt(p,q);});});
+  return {ok:!kurang.length&&!lebih.length,kurang:kurang,lebih:lebih};
+}
+/* jawaban kunci untuk satu langkah */
+function keyAns(Q,s){
+  var S=Q.st[s];
+  if(S.k==='form')return S.it.map(function(it){return it.t==='eq'?[it.key.a,it.key.b,it.key.c]:it.key;});
+  if(S.k==='pt')return {x:S.cond.p[0].x,y:S.cond.p[0].y};
+  return S.key.map(function(p){return {x:p.x,y:p.y};});
+}
+/* jawaban salah yang sah (untuk cek()) */
+function wrongAns(Q,s){
+  var S=Q.st[s],a=keyAns(Q,s);
+  if(S.k==='form'){
+    var it=S.it[0],w=a.slice();
+    if(it.t==='pg')w[0]=(it.key+1)%it.o.length;
+    else if(it.t==='num')w[0]=it.key+1;
+    else w[0]=[it.key.a,it.key.b,it.key.c+1];
+    return w;
+  }
+  var geser=function(p){return {x:p.x===Q.pl.x1?p.x-1:p.x+1,y:p.y};};
+  if(S.k==='pt')return geser(a);
+  var g=geser(a[0]);
+  return a.slice(1).filter(function(p){return !samePt(p,g);}).concat([g]);
+}
+
+/* ---------- pembentuk langkah ---------- */
+function F(nm_,q,it,h,v,lay){return {nm:nm_,k:'form',q:q,it:it,h:h||[],v:v||{},lay:lay||''};}
+function PT(nm_,q,p,h,v){return {nm:nm_,k:'pt',q:q,cond:{k:'at',p:[{x:p.x,y:p.y}]},h:h||[],v:v||{}};}
+function PS(nm_,q,key,h,v){return {nm:nm_,k:'pts',q:q,key:key.map(function(p){return {x:p.x,y:p.y};}),h:h||[],v:v||{}};}
+function pg(lab,o,key){return {t:'pg',lab:lab,o:o,key:key};}
+function num(lab,key,u){return {t:'num',lab:lab,key:rnd(key),u:u||''};}
+function eqI(lab,k,pts){return {t:'eq',lab:lab,key:{a:k.a,b:k.b,c:k.c},pts:pts||[]};}
+/* pilihan ganda: jawaban + paling banyak 3 pengecoh (pengecoh yang sama dengan jawaban atau kembar dibuang) */
+function pgS(rng,lab,key,dis){
+  var d=[];dis.forEach(function(x){if(x!==key&&d.indexOf(x)<0&&d.length<3)d.push(x);});
+  var o=shuffle([key].concat(d),rng);return pg(lab,o,o.indexOf(key));
+}
+/* sepasang isian koordinat (x, y) dengan layout 'koor' */
+function kr(lab,P){return [{t:'num',lab:lab,key:rnd(P.x),u:'',ax:'x'},{t:'num',lab:'',key:rnd(P.y),u:'',ax:'y'}];}
+function FK(nm_,q,pairs,h,v){var it=[];pairs.forEach(function(p){it=it.concat(kr(p[0],p[1]));});return F(nm_,q,it,h,v,'koor');}
+
+/* ---------- pembentuk tampilan bidang ---------- */
+function mk(P,c,l){return {x:P.x,y:P.y,c:c||'k',l:l===undefined?'':l};}
+function mkN(P,c,nama){return mk(P,c,nama+ptS(P));}
+function poly(ps,c,nama){return {p:ps.map(function(P){return [P.x,P.y];}),c:c,l:nama||[]};}
+function seg(A,B,c,dash){return {a:[A.x,A.y],b:[B.x,B.y],c:c||'k',d:dash?1:0};}
+function arc(C,A,deg,c){return {c:[C.x,C.y],a:[A.x,A.y],deg:deg,col:c||'k'};}
+function lnV(q,c,lbl){return {a:q.a,b:q.b,c:q.c,col:c||'a',l:lbl===undefined?'':lbl};}
+function ctr(P,l){return {x:P.x,y:P.y,l:l===undefined?((P.x||P.y)?'P'+ptS(P):'O'):l};}
+function mkQ(t,l,v,o){
+  return {t:t,l:l,v:v,bg:BG_TIPE[t],jd:'Tipe '+t+' · '+TIPE[t],lv:LEVEL[l],kko:o.kko,soal:o.soal,pl:o.pl||FULL,
+    st:o.st||[],vz:o.vz||{},bahas:o.bahas||[]};
+}
+/* gabungan tampilan: salin lalu timpa */
+function V(){var r={};for(var i=0;i<arguments.length;i++){var o=arguments[i]||{};for(var k in o)if(o[k]!==undefined&&o[k]!==null)r[k]=o[k];}return r;}
+var CAP_R='Biru = asal, jingga = bayangan. Panah melengkung menunjukkan arah putaran.';
+var CAP_D='Biru = asal, jingga = bayangan. Garis putus-putus melewati pusat dilatasi.';
+var CAP_G='Garis biru = garis asal, garis jingga = garis bayangan.';
+
+/* ================= A. ROTASI TITIK DAN BANGUN (Tipe 1–7) ================= */
+/* titik acak dengan koordinat bulat dari [-m, m] selain 0 */
+function titik(rng,m,syarat){
+  for(var i=0;i<200;i++){var P={x:rnz(rng,-m,m),y:rnz(rng,-m,m)};if(!syarat||syarat(P))return P;}
+  return {x:2,y:1};
+}
+function vRot(A,nA,d,o){
+  o=o||{};var C=o.C||O0,mks=[mkN(A,'a',nA)];
+  if(o.B)mks.push(mkN(o.B,'b',nA+'′'));
+  return V({mk:mks,ctr:ctr(C),seg:o.B?[seg(C,A,'a',1),seg(C,o.B,'b',1)]:[seg(C,A,'a',1)],
+    arc:o.B?arc(C,A,o.arah||d,'b'):undefined,cap:CAP_R});
+}
+var DIS_ATURAN={90:['(y, −x)','(−x, −y)','(y, x)'],180:['(−y, x)','(x, −y)','(−x, y)'],270:['(−y, x)','(−x, −y)','(x, −y)']};
+function hAturan(d){
+  return [d===180?'Rotasi 180° membalik tanda kedua koordinat, tetapi posisinya tidak bertukar.':'Rotasi '+degS(d)+' menukar posisi x dan y, lalu satu tanda berubah.',
+    'Uji dengan titik (1, 0): diputar '+degS(d)+' berlawanan arah jarum jam, titik itu berpindah ke '+ptS(rot({x:1,y:0},d))+'.'];
+}
+
+function g1(rng){
+  var A=titik(rng,6,function(P){return P.x!==P.y;}),B=rot(A,90),v0=vRot(A,'A',90);
+  return mkQ(1,'L','a',{kko:'menentukan',
+    soal:'Titik <b>A'+ptS(A)+'</b> dirotasi <b>90°</b> dengan pusat O. Tentukan koordinat A′.',
+    st:[
+      F('Aturan','Aturan pemetaan rotasi 90° dengan pusat O adalah …',[pgS(rng,'(x, y) dipetakan ke',ATURAN[90],DIS_ATURAN[90])],hAturan(90),v0),
+      F('Nilai x′','Dengan aturan (−y, x), hitung x′.',[num('x′ =',B.x)],['x′ = −y. Ganti y dengan '+nm(A.y)+', lalu ubah tandanya.'],v0),
+      F('Nilai y′','Hitung y′.',[num('y′ =',B.y)],['y′ = x, jadi y′ sama dengan absis titik A.'],v0),
+      PT('Letak A′','Ketuk letak A′ pada bidang koordinat.',B,['A′'+ptS(B)+' berarti '+nm(B.x)+' satuan ke '+(B.x<0?'kiri':'kanan')+', lalu '+nm(Math.abs(B.y))+' satuan ke '+(B.y<0?'bawah':'atas')+'.'],v0)],
+    vz:vRot(A,'A',90,{B:B}),
+    bahas:['Rotasi 90° dengan pusat O: (x, y) → (−y, x).','x′ = −('+nm(A.y)+') = '+nm(B.x)+' dan y′ = '+nm(A.x)+'.','Jadi A′'+ptS(B)+'.']});
+}
+function g2(rng){
+  var A=titik(rng,8),B=rot(A,180),v0=vRot(A,'B',180);
+  return mkQ(2,'L','a',{kko:'menentukan',
+    soal:'Titik <b>B'+ptS(A)+'</b> dirotasi <b>180°</b> dengan pusat O. Tentukan B′.',
+    st:[
+      F('Aturan','Aturan pemetaan rotasi 180° dengan pusat O adalah …',[pgS(rng,'(x, y) dipetakan ke',ATURAN[180],DIS_ATURAN[180])],hAturan(180),v0),
+      FK('Koordinat B′','Tulis koordinat B′.',[['B′',B]],['Ubah tanda kedua koordinat B: x′ = −x dan y′ = −y.'],v0),
+      PT('Letak B′','Ketuk letak B′ pada bidang koordinat.',B,['B′ berada di seberang O, segaris dengan B dan O.'],v0)],
+    vz:vRot(A,'B',180,{B:B}),
+    bahas:['Rotasi 180°: (x, y) → (−x, −y).','B′ = (−('+nm(A.x)+'), −('+nm(A.y)+')) = '+ptS(B)+'.']});
+}
+function g3(rng,v){
+  var A=titik(rng,7),B=rot(A,270),sud=v==='a'?'90° searah jarum jam':v==='b'?'−90°':'270°',v0=vRot(A,'C',270);
+  var s1=v==='c'
+    ?F('Arah setara','Rotasi 270° (berlawanan arah jarum jam) setara dengan …',[pgS(rng,'Setara dengan','90° searah jarum jam',['90° berlawanan arah jarum jam','180°'])],
+        ['Putaran penuh 360°. Memutar 270° ke satu arah sama dengan memutar 360° − 270° = 90° ke arah sebaliknya.'],v0)
+    :F('Arah setara','Rotasi '+sud+' setara dengan …',[pgS(rng,'Setara dengan','270° berlawanan arah jarum jam',['90° berlawanan arah jarum jam','180°'])],
+        ['Sudut negatif berarti searah jarum jam. 90° searah jarum jam = 360° − 90° berlawanan arah jarum jam.'],v0);
+  return mkQ(3,'M',v,{kko:'membedakan',
+    soal:'Titik <b>C'+ptS(A)+'</b> dirotasi <b>'+sud+'</b> dengan pusat O. Tentukan C′.',
+    st:[s1,
+      F('Aturan','Aturan pemetaan yang dipakai adalah …',[pgS(rng,'(x, y) dipetakan ke',ATURAN[270],['(−y, x)','(−x, −y)'])],hAturan(270),v0),
+      FK('Koordinat C′','Tulis koordinat C′.',[['C′',B]],['Dengan (y, −x): x′ = '+nm(A.y)+', y′ = −('+nm(A.x)+').'],v0),
+      PT('Letak C′','Ketuk letak C′ pada bidang koordinat.',B,['Titik C diputar seperempat putaran searah jarum jam.'],v0)],
+    vz:vRot(A,'C',270,{B:B,arah:v==='c'?270:-90}),
+    bahas:['Rotasi '+sud+' = rotasi 90° searah jarum jam = rotasi 270° berlawanan arah jarum jam.','Aturannya (x, y) → (y, −x).','C′ = '+ptS(B)+'.']});
+}
+function g4(rng,v){
+  var d=v==='a'?90:v==='b'?180:270,w=ri(rng,2,4),h=ri(rng,2,4),x0,y0;
+  do{x0=ri(rng,0,6-w);y0=ri(rng,0,6-h);}while(x0===0&&y0===0);
+  var P={x:x0,y:y0},Qp={x:x0+w,y:y0},R={x:x0,y:y0+h},T=[P,Qp,R],B=T.map(function(X){return rot(X,d);});
+  var nama=['P','Q','R'],asal=poly(T,'a',nama);
+  var vw=function(n){var o={poly:[asal],ctr:ctr(O0),cap:CAP_R};if(n>0)o.mk=B.slice(0,n).map(function(X,i){return mkN(X,'b',nama[i]+'′');});if(n===3){o.poly=[asal,poly(B,'b',['P′','Q′','R′'])];delete o.mk;o.arc=arc(O0,P,d,'k');}return V(o);};
+  return mkQ(4,'M',v,{kko:'menerapkan',
+    soal:'Segitiga PQR dengan <b>P'+ptS(P)+', Q'+ptS(Qp)+', R'+ptS(R)+'</b> dirotasi <b>'+degS(d)+'</b> dengan pusat O. Gambarlah bayangannya.',
+    st:[PT('Letak P′','Ketuk letak P′.',B[0],['Gunakan aturan '+ATURAN[d]+' untuk titik P'+ptS(P)+'.'],vw(0)),
+      PT('Letak Q′','Ketuk letak Q′.',B[1],['Gunakan aturan yang sama untuk Q'+ptS(Qp)+'.'],vw(1)),
+      PT('Letak R′','Ketuk letak R′.',B[2],['Gunakan aturan yang sama untuk R'+ptS(R)+'.'],vw(2)),
+      F('Hubungan','Bagaimana hubungan segitiga PQR dan P′Q′R′?',[pgS(rng,'Segitiga P′Q′R′','kongruen',['sebangun tetapi lebih besar','berbeda bentuk'])],
+        ['Rotasi tidak mengubah jarak antartitik, jadi panjang sisi-sisinya tetap.'],vw(3))],
+    vz:vw(3),
+    bahas:['Aturan rotasi '+degS(d)+': (x, y) → '+ATURAN[d]+'.','P′'+ptS(B[0])+', Q′'+ptS(B[1])+', R′'+ptS(B[2])+'.','Rotasi tidak mengubah ukuran, jadi P′Q′R′ kongruen dengan PQR.']});
+}
+function g5(rng,v){
+  var d=v==='a'?90:v==='b'?180:270,A=titik(rng,6,function(P){return Math.abs(P.x)!==Math.abs(P.y);}),B=rot(A,d);
+  var vw=V({mk:[mkN(A,'a','K'),mkN(B,'b','K′')],ctr:ctr(O0),seg:[seg(O0,A,'a',1),seg(O0,B,'b',1)],cap:CAP_R});
+  var rel=HUBUNGAN[d],dis=[90,180,270].filter(function(x){return x!==d;}).map(function(x){return HUBUNGAN[x];});
+  return mkQ(5,'H',v,{kko:'menganalisis',
+    soal:'Titik <b>K'+ptS(A)+'</b> dirotasi dengan pusat O sehingga bayangannya <b>K′'+ptS(B)+'</b>. Berapa sudut rotasinya?',
+    st:[F('Hubungan koordinat','Bandingkan koordinat K dan K′. Hubungan yang benar adalah …',[pgS(rng,'Hubungan',rel,dis)],
+        ['Periksa dulu: apakah x dan y bertukar posisi? Lalu periksa tandanya.','Bandingkan x′ = '+nm(B.x)+' dengan x = '+nm(A.x)+' dan y = '+nm(A.y)+'.'],vw),
+      F('Sudut rotasi','Besar sudut rotasinya adalah …',[pgS(rng,'Sudut (berlawanan arah jarum jam)',degS(d),['90°','180°','270°'])],
+        ['Cocokkan hubungan tadi dengan tabel: (−y, x) = 90°, (−x, −y) = 180°, (y, −x) = 270°.'],vw)],
+    vz:V(vw,{arc:arc(O0,A,d,'b')}),
+    bahas:['K'+ptS(A)+' → K′'+ptS(B)+' memenuhi '+rel+'.','Hubungan itu adalah aturan rotasi '+degS(d)+'.']});
+}
+function g6(rng,v){
+  var d=v==='a'?90:v==='b'?180:270,B=titik(rng,6),A=rot(B,360-d);
+  var vw=V({mk:[mkN(B,'b','D′')],ctr:ctr(O0),cap:CAP_R});
+  var st2,st3;
+  if(d===90){st2=F('Nilai y','Dari −y = x′, tentukan nilai y.',[num('y =',A.y)],['−y = '+nm(B.x)+', jadi y adalah lawan dari '+nm(B.x)+'.'],vw);
+    st3=F('Nilai x','Dari x = y′, tentukan nilai x.',[num('x =',A.x)],['x langsung sama dengan y′ = '+nm(B.y)+'.'],vw);}
+  else if(d===270){st2=F('Nilai y','Dari y = x′, tentukan nilai y.',[num('y =',A.y)],['y langsung sama dengan x′ = '+nm(B.x)+'.'],vw);
+    st3=F('Nilai x','Dari −x = y′, tentukan nilai x.',[num('x =',A.x)],['−x = '+nm(B.y)+', jadi x adalah lawan dari '+nm(B.y)+'.'],vw);}
+  else{st2=F('Nilai x','Dari −x = x′, tentukan nilai x.',[num('x =',A.x)],['−x = '+nm(B.x)+', jadi x adalah lawan dari '+nm(B.x)+'.'],vw);
+    st3=F('Nilai y','Dari −y = y′, tentukan nilai y.',[num('y =',A.y)],['−y = '+nm(B.y)+', jadi y adalah lawan dari '+nm(B.y)+'.'],vw);}
+  return mkQ(6,'H',v,{kko:'menganalisis',
+    soal:'Titik D dirotasi <b>'+degS(d)+'</b> dengan pusat O menghasilkan <b>D′'+ptS(B)+'</b>. Tentukan koordinat D.',
+    st:[F('Aturan','Aturan rotasi '+degS(d)+' adalah …',[pgS(rng,'(x, y) dipetakan ke',ATURAN[d],DIS_ATURAN[d])],hAturan(d),vw),
+      st2,st3,
+      PT('Letak D','Ketuk letak D pada bidang koordinat.',A,['Periksa: bila D diputar '+degS(d)+', hasilnya harus D′'+ptS(B)+'.'],vw)],
+    vz:V({mk:[mkN(A,'a','D'),mkN(B,'b','D′')],ctr:ctr(O0),seg:[seg(O0,A,'a',1),seg(O0,B,'b',1)],arc:arc(O0,A,d,'b'),cap:CAP_R}),
+    bahas:['Aturan rotasi '+degS(d)+': (x, y) → '+ATURAN[d]+'.','Samakan dengan D′'+ptS(B)+', lalu selesaikan untuk x dan y.','Jadi D'+ptS(A)+'. Cara lain: putar D′ sebesar '+degS(d)+' ke arah sebaliknya.']});
+}
+function g7(rng,v){
+  var d=v==='a'?90:v==='b'?180:270,C,D;
+  do{C={x:ri(rng,-3,3),y:ri(rng,-3,3)};}while(C.x===0&&C.y===0);
+  D={x:rnz(rng,-4,4),y:rnz(rng,-4,4)};
+  var A=P2(C.x+D.x,C.y+D.y),RD=rot(D,d),B=P2(C.x+RD.x,C.y+RD.y);
+  var vw=V({mk:[mkN(A,'a','A')],ctr:ctr(C),seg:[seg(C,A,'a',1)],cap:CAP_R});
+  return mkQ(7,'H',v,{kko:'menerapkan',
+    soal:'Titik <b>A'+ptS(A)+'</b> dirotasi <b>'+degS(d)+'</b> dengan pusat <b>P'+ptS(C)+'</b>. Tentukan A′.',
+    st:[FK('Geser ke O','Hitung selisih terhadap pusat: (x − a, y − b).',[['(x − a, y − b)',D]],['x − a = '+nm(A.x)+' − ('+nm(C.x)+') dan y − b = '+nm(A.y)+' − ('+nm(C.y)+').'],vw),
+      FK('Rotasi '+degS(d),'Rotasikan hasil tadi sebesar '+degS(d)+' dengan pusat O.',[['Hasil rotasi',RD]],['Gunakan aturan '+ATURAN[d]+' pada '+ptS(D)+'.'],vw),
+      FK('Geser kembali','Tambahkan kembali (a, b) = '+ptS(C)+'.',[['A′',B]],['Jumlahkan: '+ptS(RD)+' + '+ptS(C)+'.'],vw),
+      PT('Letak A′','Ketuk letak A′ pada bidang koordinat.',B,['Jarak A′ ke P harus sama dengan jarak A ke P.'],vw)],
+    vz:V(vw,{mk:[mkN(A,'a','A'),mkN(B,'b','A′')],seg:[seg(C,A,'a',1),seg(C,B,'b',1)],arc:arc(C,A,d,'b')}),
+    bahas:['Selisih terhadap pusat: '+ptS(D)+'.','Dirotasi '+degS(d)+' menjadi '+ptS(RD)+'.','Ditambah '+ptS(C)+' menjadi A′'+ptS(B)+'.']});
+}
+
+/* ================= B. DILATASI TITIK DAN BANGUN (Tipe 8–14) ================= */
+function vDil(A,nA,C,B){
+  C=C||O0;var mks=[mkN(A,'a',nA)],sg=[];
+  if(B){mks.push(mkN(B,'b',nA+'′'));sg.push(seg(C,(Math.abs(B.x-C.x)+Math.abs(B.y-C.y)>Math.abs(A.x-C.x)+Math.abs(A.y-C.y))?B:A,'k',1));
+    if((B.x-C.x)*(A.x-C.x)+(B.y-C.y)*(A.y-C.y)<0)sg=[seg(C,A,'a',1),seg(C,B,'b',1)];}
+  else sg.push(seg(C,A,'a',1));
+  return V({mk:mks,ctr:ctr(C),seg:sg,cap:CAP_D});
+}
+var DIS_DIL=['(x + k, y + k)','(kx, y)','(x, ky)'];
+function hDil(){return ['Dilatasi [O, k] mengalikan kedua koordinat dengan k.','Hati-hati: koordinat dikalikan k, bukan ditambah k.'];}
+function g8(rng){
+  var k=pick(rng,[2,3]),A=titik(rng,3),B=dil(A,k),v0=vDil(A,'A');
+  return mkQ(8,'L','a',{kko:'menentukan',
+    soal:'Titik <b>A'+ptS(A)+'</b> didilatasi dengan pusat O dan faktor skala <b>'+nm(k)+'</b>. Tentukan A′.',
+    st:[F('Aturan','Aturan pemetaan dilatasi [O, k] adalah …',[pgS(rng,'(x, y) dipetakan ke','(kx, ky)',DIS_DIL)],hDil(),v0),
+      FK('Koordinat A′','Tulis koordinat A′.',[['A′',B]],['x′ = '+nm(k)+' × '+nm(A.x)+' dan y′ = '+nm(k)+' × '+nm(A.y)+'.'],v0),
+      PT('Letak A′','Ketuk letak A′ pada bidang koordinat.',B,['A′ terletak pada garis yang melalui O dan A, '+nm(k)+' kali lebih jauh dari O.'],v0)],
+    vz:vDil(A,'A',O0,B),
+    bahas:['Dilatasi [O, '+nm(k)+']: (x, y) → ('+nm(k)+'x, '+nm(k)+'y).','A′ = ('+nm(k)+' × '+nm(A.x)+', '+nm(k)+' × '+nm(A.y)+') = '+ptS(B)+'.']});
+}
+function g9(rng){
+  var n=pick(rng,[2,3,4]),k=1/n,m=Math.floor(9/n),A={x:n*rnz(rng,-m,m),y:n*rnz(rng,-m,m)},B=dil(A,k),v0=vDil(A,'B');
+  return mkQ(9,'L','a',{kko:'menentukan',
+    soal:'Titik <b>B'+ptS(A)+'</b> didilatasi dengan pusat O dan faktor skala <b>'+nm(k)+'</b>. Tentukan B′.',
+    st:[F('Jenis dilatasi','Dilatasi ini termasuk …',[pgS(rng,'Jenis','pengecilan',['perbesaran','tetap'])],['Bandingkan k dengan 1. Jika 0 < k < 1, bayangan lebih dekat ke O.'],v0),
+      FK('Koordinat B′','Tulis koordinat B′.',[['B′',B]],['Mengalikan dengan '+nm(k)+' sama dengan membagi '+nm(n)+'.'],v0),
+      PT('Letak B′','Ketuk letak B′ pada bidang koordinat.',B,['B′ terletak di antara O dan B.'],v0)],
+    vz:vDil(A,'B',O0,B),
+    bahas:['k = '+nm(k)+' berada di antara 0 dan 1, jadi pengecilan.','B′ = ('+nm(k)+' × '+nm(A.x)+', '+nm(k)+' × '+nm(A.y)+') = '+ptS(B)+'.']});
+}
+function g10(rng){
+  var k=pick(rng,[-1,-2,-3,-0.5]),A=k===-0.5?{x:2*sgn(rng),y:2*sgn(rng)}:titik(rng,3),B=dil(A,k),v0=vDil(A,'C');
+  return mkQ(10,'M','a',{kko:'membedakan',
+    soal:'Titik <b>C'+ptS(A)+'</b> didilatasi dengan pusat O dan faktor skala <b>'+nm(k)+'</b>. Tentukan C′.',
+    st:[F('Letak bayangan','Bagaimana letak bayangan terhadap pusat O?',[pgS(rng,'C′ terletak','berlawanan pihak dengan titik asal',['sepihak dengan titik asal'])],['Tanda negatif pada k membuat bayangan pindah ke seberang pusat.'],v0),
+      FK('Koordinat C′','Tulis koordinat C′.',[['C′',B]],['Kalikan kedua koordinat dengan '+nm(k)+'. Perhatikan tandanya.'],v0),
+      PT('Letak C′','Ketuk letak C′ pada bidang koordinat.',B,['C′ segaris dengan C dan O, tetapi di seberang O.'],v0)],
+    vz:vDil(A,'C',O0,B),
+    bahas:['k negatif → bayangan berlawanan pihak dengan titik asal terhadap O.','C′ = ('+nm(k)+' × '+nm(A.x)+', '+nm(k)+' × '+nm(A.y)+') = '+ptS(B)+'.',
+      Math.abs(k)>1?'|k| > 1, jadi bayangan juga diperbesar.':Math.abs(k)<1?'|k| < 1, jadi bayangan juga diperkecil.':'|k| = 1, jadi ukurannya tetap (sama dengan rotasi 180°).']});
+}
+function jenisK(k){return (Math.abs(k)>1?'perbesaran':'pengecilan')+', '+(k>0?'sepihak':'berlawanan pihak');}
+function g11(rng){
+  var k=pick(rng,[-3,-2,-0.5,0.5,2,3]),A;
+  if(Math.abs(k)===0.5)A={x:2*rnz(rng,-4,4),y:2*rnz(rng,-4,4)};else{var m=Math.floor(9/Math.abs(k));A=titik(rng,m);}
+  var B=dil(A,k),vw=V({mk:[mkN(A,'a','P'),mkN(B,'b','P′')],ctr:ctr(O0),cap:CAP_D});
+  var opsi=['perbesaran, sepihak','pengecilan, sepihak','perbesaran, berlawanan pihak','pengecilan, berlawanan pihak'];
+  return mkQ(11,'M','a',{kko:'menganalisis',
+    soal:'Titik <b>P'+ptS(A)+'</b> didilatasi dengan pusat O menghasilkan <b>P′'+ptS(B)+'</b>. Tentukan faktor skalanya.',
+    st:[F('x′ : x','Hitung x′ : x.',[num('x′ : x =',k)],['Bagi '+nm(B.x)+' dengan '+nm(A.x)+'. Boleh ditulis sebagai pecahan, misalnya −1/2.'],vw),
+      F('y′ : y','Hitung y′ : y.',[num('y′ : y =',k)],['Bagi '+nm(B.y)+' dengan '+nm(A.y)+'. Hasilnya harus sama dengan x′ : x.'],vw),
+      F('Jenis dilatasi','Jadi k = '+nm(k)+'. Dilatasi ini termasuk …',[pgS(rng,'Jenis',jenisK(k),opsi)],['Besar-kecil dilihat dari |k|; tanda k menentukan pihak.'],vw)],
+    vz:V(vw,{seg:[seg(O0,A,'a',1),seg(O0,B,'b',1)]}),
+    bahas:['k = x′ : x = '+nm(B.x)+' : '+nm(A.x)+' = '+nm(k)+'.','y′ : y = '+nm(B.y)+' : '+nm(A.y)+' = '+nm(k)+' (sama).','|k| '+(Math.abs(k)>1?'> 1 → perbesaran':'< 1 → pengecilan')+'; k '+(k>0?'positif → sepihak':'negatif → berlawanan pihak')+'.']});
+}
+/* pilihan perbandingan luas: k², |k|, 2|k| (bila 2|k| = k², diganti |k| + 1) */
+function opsiLuas(k){
+  var a=Math.abs(k),k2=rnd(k*k),d2=rnd(2*a)===k2?['|k| + 1 = '+nm(a+1)]:['2|k| = '+nm(2*a)];
+  return {key:'k² = '+nm(k2),dis:['|k| = '+nm(a)].concat(d2)};
+}
+function persegi(x0,y0,w,h){return [{x:x0,y:y0},{x:x0+w,y:y0},{x:x0+w,y:y0+h},{x:x0,y:y0+h}];}
+function g12(rng,v){
+  var k=v==='b'?-2:pick(rng,[2,3]),a=Math.abs(k),m=Math.floor(9/a),w=ri(rng,2,3),h=ri(rng,1,w-1);
+  var x0=ri(rng,-m,m-w),y0=ri(rng,-m,m-h),T=persegi(x0,y0,w,h),B=T.map(function(X){return dil(X,k);});
+  var nm4=['A','B','C','D'],ol=opsiLuas(k);
+  var v0=V({poly:[poly(T,'a',nm4)],ctr:ctr(O0),cap:'Biru = persegi panjang asal. Satu kotak = 1 satuan.'});
+  var vw=V({poly:[poly(T,'a',nm4),poly(B,'b',['A′','B′','C′','D′'])],ctr:ctr(O0),cap:CAP_D+' Satu kotak = 1 satuan.'});
+  return mkQ(12,'M',v,{kko:'menghitung',
+    soal:'Persegi panjang ABCD dengan <b>A'+ptS(T[0])+', B'+ptS(T[1])+', C'+ptS(T[2])+', D'+ptS(T[3])+'</b> didilatasi dengan pusat O dan faktor skala <b>'+nm(k)+'</b>. Tentukan luas bayangannya.',
+    st:[F('Panjang A′B′','Hitung panjang A′B′.',[num('A′B′ =',a*w)],['AB = '+nm(w)+'. Panjang sisi bayangan = |k| × panjang sisi asal.'],v0),
+      F('Lebar B′C′','Hitung lebar B′C′.',[num('B′C′ =',a*h)],['BC = '+nm(h)+'. Kalikan dengan |k| = '+nm(a)+'.'],v0),
+      F('Luas bayangan','Hitung luas A′B′C′D′.',[num('Luas =',a*a*w*h)],['Luas persegi panjang = panjang × lebar.'],v0),
+      F('Perbandingan luas','Luas bayangan : luas asal sama dengan …',[pgS(rng,'Perbandingan',ol.key,ol.dis)],['Luas asal = '+nm(w*h)+'. Bagi luas bayangan dengan luas asal.'],vw)],
+    vz:vw,
+    bahas:['A′B′ = '+nm(a)+' × '+nm(w)+' = '+nm(a*w)+' dan B′C′ = '+nm(a)+' × '+nm(h)+' = '+nm(a*h)+'.','Luas bayangan = '+nm(a*w)+' × '+nm(a*h)+' = '+nm(a*a*w*h)+'.','Luas asal '+nm(w*h)+', jadi perbandingannya '+nm(a*a)+' = k².']});
+}
+var OBJEK_BONE=[['foto Rumah Adat Bola Soba','mading sekolah'],['foto Museum Lapawawoi','mading sekolah'],['foto Masjid Raya Watampone','buletin OSIS'],['foto Tugu Arung Palakka','papan pengumuman']];
+function g13(rng){
+  var k,w,h;
+  for(var i=0;i<100;i++){k=pick(rng,[1.5,2,2.5,3,0.5]);w=ri(rng,2,10);h=ri(rng,2,10);
+    if(w<h&&isInt(k*w)&&isInt(k*h)&&k*h<=30)break;}
+  if(!(w<h&&isInt(k*w)&&isInt(k*h)))k=2,w=4,h=6;
+  var ob=pick(rng,OBJEK_BONE),W=k*w,H=k*h,mx=Math.max(h,H),g=mx>16?2:1,top=Math.ceil((mx+1)/g)*g+g;
+  var pl={x0:-g,y0:-g,x1:top,y1:top,g:g,lb:g*((top/g)>12?2:1)};
+  var O=O0,R0=persegi(0,0,w,h),R1=persegi(0,0,W,H);
+  var kot=g>1?' Satu kotak = '+g+' cm.':' Satu kotak = 1 cm.';
+  var v0=V({poly:[poly(R0,'a',[])],ctr:ctr(O,'O'),cap:'Biru = foto lama (satuan cm).'+kot});
+  var vw=V({poly:[poly(R0,'a',[]),poly(R1,'b',[])],ctr:ctr(O,'O'),seg:[seg(O,{x:W,y:H},'k',1)],cap:'Biru = foto lama, jingga = foto baru (satuan cm). Pusat dilatasi di pojok kiri bawah foto.'+kot});
+  var verb=k<1?'diperkecil':'diperbesar';
+  return mkQ(13,'M','a',{kko:'menerapkan',pl:pl,
+    soal:'OSIS SMA di Watampone akan memajang '+ob[0]+' di '+ob[1]+'. Foto berukuran <b>'+nm(w)+' cm × '+nm(h)+' cm</b> '+verb+' dengan faktor skala <b>'+nm(k)+'</b>. Tentukan ukuran foto hasil '+(k<1?'pengecilan':'perbesaran')+'.',
+    st:[F('Lebar baru','Hitung lebar foto baru.',[num('Lebar =',W,'cm')],['Lebar baru = k × lebar lama = '+nm(k)+' × '+nm(w)+'.'],v0),
+      F('Panjang baru','Hitung panjang foto baru.',[num('Panjang =',H,'cm')],['Panjang baru = '+nm(k)+' × '+nm(h)+'.'],v0),
+      F('Foto baru','Foto baru dibandingkan foto lama …',[pgS(rng,'Kedua foto','sebangun',['kongruen','tidak sebangun'])],['Dilatasi mengubah ukuran tetapi tidak mengubah bentuk.'],vw)],
+    vz:vw,
+    bahas:['Lebar baru = '+nm(k)+' × '+nm(w)+' = '+nm(W)+' cm.','Panjang baru = '+nm(k)+' × '+nm(h)+' = '+nm(H)+' cm.','Ukuran berubah tetapi perbandingan sisi tetap, jadi kedua foto sebangun.']});
+}
+function g14(rng){
+  var k=pick(rng,[-2,-1,2,0.5]),C,D,A,B;
+  for(var i=0;i<200;i++){
+    C={x:ri(rng,-3,3),y:ri(rng,-3,3)};if(C.x===0&&C.y===0)continue;
+    D=k===0.5?{x:2*rnz(rng,-2,2),y:2*rnz(rng,-2,2)}:{x:rnz(rng,-4,4),y:rnz(rng,-4,4)};
+    A=P2(C.x+D.x,C.y+D.y);B=dil(A,k,C);
+    if(Math.max(Math.abs(A.x),Math.abs(A.y),Math.abs(B.x),Math.abs(B.y))<=9)break;
+  }
+  var KD=P2(k*D.x,k*D.y),vw=V({mk:[mkN(A,'a','A')],ctr:ctr(C),seg:[seg(C,A,'a',1)],cap:CAP_D});
+  return mkQ(14,'H','a',{kko:'menerapkan',
+    soal:'Titik <b>A'+ptS(A)+'</b> didilatasi dengan pusat <b>P'+ptS(C)+'</b> dan faktor skala <b>'+nm(k)+'</b>. Tentukan A′.',
+    st:[FK('Selisih','Hitung selisih terhadap pusat: (x − a, y − b).',[['(x − a, y − b)',D]],['Kurangkan koordinat pusat dari koordinat A.'],vw),
+      FK('Kali k','Kalikan selisih itu dengan k = '+nm(k)+'.',[['k(x − a, y − b)',KD]],['Kalikan kedua koordinat '+ptS(D)+' dengan '+nm(k)+'.'],vw),
+      FK('Tambah pusat','Tambahkan kembali (a, b) = '+ptS(C)+'.',[['A′',B]],['Jumlahkan '+ptS(KD)+' dengan '+ptS(C)+'.'],vw),
+      PT('Letak A′','Ketuk letak A′ pada bidang koordinat.',B,['A′ segaris dengan P dan A.'],vw)],
+    vz:vDil(A,'A',C,B),
+    bahas:['Selisih: '+ptS(D)+'.','Dikali '+nm(k)+': '+ptS(KD)+'.','Ditambah '+ptS(C)+': A′'+ptS(B)+'.']});
+}
+
+/* ================= C. ROTASI DAN DILATASI PERSAMAAN GARIS (Tipe 15–19) ================= */
+/* ax + by = c dari y = mx + n */
+function dariYM(m,n){return L(-m,1,n);}
+function g15(rng){
+  var m=pick(rng,[-3,-2,-1,1,2,3]),n=ri(rng,-3,3),P1={x:0,y:n},P2_={x:1,y:m+n},B1=rot(P1,90),B2=rot(P2_,90);
+  var q=dariYM(m,n),qb=rotLn(q,90),grad=-1/m;
+  /* bayangan: x + my + n = 0 */
+  var key=zeroS(1,m,n),dis=[zeroS(1,-m,n),zeroS(m,1,n),zeroS(1,m,-n),zeroS(-m,1,n)];
+  var la=lnV(q,'a',ymS(m,n)),v0=V({ln:[la],ctr:ctr(O0),cap:CAP_G});
+  var v1=V(v0,{mk:[mkN(P1,'a',''),mkN(P2_,'a','')]}),v2=V(v1,{mk:[mk(P1,'a',ptS(P1)),mk(P2_,'a',ptS(P2_)),mk(B1,'b',ptS(B1)),mk(B2,'b',ptS(B2))],seg:[seg(O0,P1,'a',1),seg(O0,B1,'b',1)]});
+  return mkQ(15,'M','a',{kko:'menerapkan',
+    soal:'Garis <b>'+ymS(m,n)+'</b> dirotasi <b>90°</b> dengan pusat O. Tentukan persamaan bayangannya.',
+    st:[PS('Dua titik','Ketuk dua titik pada garis asal: titik dengan x = 0 dan titik dengan x = 1.',[P1,P2_],['Substitusikan x = 0 dan x = 1 ke '+ymS(m,n)+' untuk mendapat nilai y.'],v0),
+      FK('Bayangan titik 1','Tentukan bayangan titik '+ptS(P1)+' oleh rotasi 90°.',[['Bayangan',B1]],['Rotasi 90°: (x, y) → (−y, x).'],v1),
+      FK('Bayangan titik 2','Tentukan bayangan titik '+ptS(P2_)+' oleh rotasi 90°.',[['Bayangan',B2]],['Gunakan aturan (−y, x) yang sama.'],v1),
+      PS('Letak bayangan','Ketuk kedua titik bayangan pada bidang.',[B1,B2],['Kedua titik bayangan yang kamu hitung tadi.'],V(v0,{mk:[mk(P1,'a',ptS(P1)),mk(P2_,'a',ptS(P2_))]})),
+      F('Gradien','Hitung gradien garis bayangan. Boleh ditulis pecahan, misalnya −1/2.',[num('m =',grad)],['m = (y₂ − y₁) : (x₂ − x₁) memakai '+ptS(B1)+' dan '+ptS(B2)+'.'],v2),
+      F('Persamaan bayangan','Persamaan garis bayangan adalah …',[pgS(rng,'Garis bayangan',key,dis.slice(0,6))],['Garis melalui '+ptS(B1)+' dengan gradien '+nm(grad)+'. Susun y − y₁ = m(x − x₁), lalu pindahkan semua suku ke ruas kiri.'],V(v2,{ln:[la,lnV(qb,'b','')]}))],
+    vz:V(v2,{ln:[la,lnV(qb,'b',key)]}),
+    bahas:['Titik pada garis: '+ptS(P1)+' dan '+ptS(P2_)+'.','Bayangannya oleh rotasi 90°: '+ptS(B1)+' dan '+ptS(B2)+'.','Gradien '+nm(grad)+', persamaan bayangan '+key+'.']});
+}
+/* hasil substitusi dalam peubah beraksen, mis. "2y′ + x′ = 4" */
+function subPrim(suku,c){return sum(suku)+' = '+nm(c);}
+function acakGaris(rng,cNol){
+  for(var i=0;i<200;i++){var q=norm(rnz(rng,-3,3),rnz(rng,-3,3),cNol?0:rnz(rng,-6,6));
+    if(gcd(q.a,q.b)===1&&(cNol||q.c!==0))return q;}
+  return L(2,-1,4);
+}
+var KED=['tegak lurus','sejajar','berimpit'];
+function g16(rng,v){
+  var d=v==='b'?270:90,q=acakGaris(rng),qr=rotLn(q,d),qb=norm(qr.a,qr.b,qr.c),la=lnV(q,'a',eqS(q)),v0=V({ln:[la],ctr:ctr(O0),cap:CAP_G});
+  /* 90°: x = y′, y = −x′ → a·y′ − b·x′ = c ; 270°: x = −y′, y = x′ → −a·y′ + b·x′ = c
+     pilihan ditulis dengan suku y′ lebih dulu; pengecoh dibedakan menurut nilai koefisien, bukan urutan tulisan */
+  var s=d===90?1:-1,Y=s*q.a,X=-s*q.b,tulis=function(p){return subPrim([[p[0],'y′'],[p[1],'x′']],q.c);};
+  var key=tulis([Y,X]),dis=[];
+  [[Y,-X],[-Y,X],[-Y,-X],[X,Y],[-X,Y]].forEach(function(p){var t=tulis(p);if((p[0]!==Y||p[1]!==X)&&dis.indexOf(t)<0&&t!==key)dis.push(t);});
+  var src=d===90?'x′ = −y dan y′ = x':'x′ = y dan y′ = −x';
+  return mkQ(16,'H',v,{kko:'menerapkan',
+    soal:'Garis <b>'+eqS(q)+'</b> dirotasi <b>'+degS(d)+'</b> dengan pusat O. Tentukan persamaan bayangannya.',
+    st:[F('Nyatakan x dan y','Dari '+src+', nyatakan x dan y dalam x′ dan y′.',[pgS(rng,'Substitusi',SUBST[d],[SUBST[d===90?270:90],'x = x′, y = −y′'])],['Balik hubungannya: dari '+src+', cari x lalu y.'],v0),
+      F('Substitusi','Substitusikan ke '+eqS(q)+'. Hasilnya …',[pgS(rng,'Hasil substitusi',key,dis)],['Ganti x dengan '+(d===90?'y′':'−y′')+' dan y dengan '+(d===90?'−x′':'x′')+'. Perhatikan tanda.'],v0),
+      F('Persamaan bayangan','Tulis persamaan bayangan dalam bentuk ax + by = c (hapus tanda aksen).',[eqI('Garis bayangan',qb,[])],['Susun ulang hasil substitusi: suku x di depan, lalu suku y.'],v0),
+      F('Kedudukan','Kedudukan garis bayangan terhadap garis asal adalah …',[pgS(rng,'Kedudukan','tegak lurus',KED)],['Rotasi 90° atau 270° memutar arah garis seperempat putaran.'],V(v0,{ln:[la,lnV(qb,'b',eqS(qb))]}))],
+    vz:V(v0,{ln:[la,lnV(qb,'b',eqS(qb))]}),
+    bahas:['Substitusi: '+SUBST[d]+'.','Hasil: '+key+', jadi bayangannya '+eqS(qb)+'.','Rotasi '+degS(d)+' menghasilkan garis yang tegak lurus garis asal.']});
+}
+function g17(rng,v){
+  var nol=v==='b',q=acakGaris(rng,nol),qb=rotLn(q,180),la=lnV(q,'a',eqS(q)),v0=V({ln:[la],ctr:ctr(O0),cap:CAP_G});
+  var hasil=subPrim([[-q.a,'x′'],[-q.b,'y′']],q.c);
+  return mkQ(17,nol?'H':'M',v,{kko:'membandingkan',
+    soal:'Garis <b>'+eqS(q)+'</b> dirotasi <b>180°</b> dengan pusat O. Tentukan persamaan bayangannya.',
+    st:[F('Substitusi','Substitusi yang dipakai untuk rotasi 180° adalah …',[pgS(rng,'Substitusi',SUBST[180],[SUBST[90],'x = −x′, y = y′'])],['Rotasi 180°: x′ = −x dan y′ = −y.'],v0),
+      F('Nilai c','Hasil substitusi: '+hasil+'. Ubah ke bentuk '+lin(q.a,q.b)+' = c. Berapa c?',[num('c =',-q.c)],['Kalikan kedua ruas dengan −1, lalu hapus tanda aksen.'],v0),
+      F('Kedudukan','Kedudukan garis bayangan terhadap garis asal adalah …',[pgS(rng,'Kedudukan',nol?'berimpit':'sejajar',KED)],
+        nol?['Garis asal melalui O. Bayangan titik O oleh rotasi 180° adalah O sendiri.']:['Bandingkan koefisien x dan y kedua garis. Apakah gradiennya sama?'],V(v0,{ln:[la,lnV(qb,'b',nol?'':eqS(qb))]}))],
+    vz:V(v0,{ln:[la,lnV(qb,'b',nol?'':eqS(qb))]}),
+    bahas:['Substitusi x = −x′, y = −y′ memberi '+hasil+'.','Dikalikan −1: '+eqS(qb)+'.',nol?'Karena c = 0, garis melalui O sehingga bayangannya berimpit.':'Gradiennya sama, jadi kedua garis sejajar.']});
+}
+function g18(rng){
+  var k=pick(rng,[2,3]),ab=pick(rng,[[1,1],[1,2],[2,1]]),a=ab[0],b=ab[1],cs=[];
+  for(var c=1;c<=9;c++)if(c%a===0&&c%b===0&&k*c/a<=9&&k*c/b<=9)cs.push(c);
+  var c0=pick(rng,cs),q=L(a,b,c0),qb=dilLn(q,k),X={x:k*c0/a,y:0},Y={x:0,y:k*c0/b};
+  var la=lnV(q,'a',eqS(q)),v0=V({ln:[la],ctr:ctr(O0),cap:CAP_G});
+  return mkQ(18,'M','a',{kko:'menerapkan',
+    soal:'Garis <b>'+eqS(q)+'</b> didilatasi dengan pusat O dan faktor skala <b>'+nm(k)+'</b>. Tentukan persamaan bayangannya.',
+    st:[F('Substitusi','Substitusi yang dipakai adalah …',[pgS(rng,'Substitusi','x = x′/'+nm(k)+', y = y′/'+nm(k),['x = '+nm(k)+'x′, y = '+nm(k)+'y′','x = x′ − '+nm(k)+', y = y′ − '+nm(k)])],['Dari x′ = '+nm(k)+'x, nyatakan x dalam x′.'],v0),
+      F('Nilai c','Hasil substitusi dikalikan '+nm(k)+' menjadi '+lin(a,b)+' = c. Berapa c?',[num('c =',k*c0)],['Ruas kanan '+nm(c0)+' ikut dikalikan '+nm(k)+'.'],v0),
+      PS('Titik potong','Ketuk titik potong garis bayangan dengan sumbu-x dan sumbu-y.',[X,Y],['Pada garis '+eqS(qb)+', substitusikan y = 0, lalu x = 0.'],v0),
+      F('Kedudukan','Kedudukan garis bayangan terhadap garis asal adalah …',[pgS(rng,'Kedudukan','sejajar',KED)],['Koefisien x dan y tidak berubah, hanya ruas kanan yang berubah.'],V(v0,{ln:[la,lnV(qb,'b',eqS(qb))]}))],
+    vz:V(v0,{ln:[la,lnV(qb,'b',eqS(qb))],mk:[mk(X,'b',ptS(X)),mk(Y,'b',ptS(Y))]}),
+    bahas:['Substitusi x = x′/'+nm(k)+', y = y′/'+nm(k)+'.','Dikalikan '+nm(k)+': '+eqS(qb)+'.','Titik potong '+ptS(X)+' dan '+ptS(Y)+'. Gradien sama, jadi sejajar.']});
+}
+/* koefisien substitusi x = (1/k)x′ */
+function subK(f){return 'x = '+sum([[f,'x′']])+', y = '+sum([[f,'y′']]);}
+function g19(rng){
+  var k,q,x0,ok=false;
+  for(var i=0;i<300&&!ok;i++){
+    k=pick(rng,[-2,-1,-0.5,0.5]);var a=ri(rng,1,3),b=rnz(rng,-3,3);if(gcd(a,b)!==1)continue;
+    x0=rnz(rng,-8,8);var c=a*x0;
+    if(Math.abs(k*x0)>9||!isInt(k*c)||!isInt(k*x0))continue;
+    q=L(a,b,c);ok=true;
+  }
+  if(!ok){k=-0.5;q=L(1,-2,6);x0=6;}
+  var qb=dilLn(q,k),X0={x:x0,y:0},XB={x:rnd(k*x0),y:0},f=1/k;
+  var key=subK(f),dis=[subK(k),subK(-f),subK(-k),'x = x′ − 1, y = y′ − 1'];
+  var hasil=subPrim([[q.a*f,'x′'],[q.b*f,'y′']],q.c);
+  var la=lnV(q,'a',eqS(q)),v0=V({ln:[la],ctr:ctr(O0),cap:CAP_G});
+  var neg=k<0,letak=neg?'sejajar, di pihak berlawanan dari O':'sejajar, di pihak yang sama dari O';
+  return mkQ(19,'H','a',{kko:'menganalisis',
+    soal:'Garis <b>'+eqS(q)+'</b> didilatasi dengan pusat O dan faktor skala <b>'+nm(k)+'</b>. Tentukan persamaan bayangannya.',
+    st:[F('Substitusi','Substitusi yang dipakai adalah …',[pgS(rng,'Substitusi',key,dis)],['Dari x′ = '+nm(k)+'x, maka x = x′ : ('+nm(k)+').'],v0),
+      F('Nilai c','Hasil substitusi '+hasil+' disederhanakan menjadi '+lin(q.a,q.b)+' = c. Berapa c?',[num('c =',k*q.c)],['Kalikan kedua ruas dengan '+nm(k)+' agar koefisiennya kembali '+lin(q.a,q.b)+'.'],v0),
+      PT('Bayangan titik','Ketuk bayangan titik '+ptS(X0)+' oleh dilatasi ini.',XB,['Kalikan koordinat '+ptS(X0)+' dengan k = '+nm(k)+'.'],V(v0,{mk:[mk(X0,'a',ptS(X0))]})),
+      F('Letak garis','Letak garis bayangan terhadap garis asal adalah …',[pgS(rng,'Garis bayangan',letak,[neg?'sejajar, di pihak yang sama dari O':'sejajar, di pihak berlawanan dari O','tegak lurus'])],['Bandingkan titik potong sumbu-x: '+ptS(X0)+' dan '+ptS(XB)+'. Apakah keduanya di sisi yang sama dari O?'],V(v0,{ln:[la,lnV(qb,'b',eqS(qb))],mk:[mk(X0,'a',ptS(X0)),mk(XB,'b',ptS(XB))]}))],
+    vz:V(v0,{ln:[la,lnV(qb,'b',eqS(qb))],mk:[mk(X0,'a',ptS(X0)),mk(XB,'b',ptS(XB))]}),
+    bahas:['Substitusi '+key+' memberi '+hasil+'.','Dikalikan '+nm(k)+': '+eqS(qb)+'.','Titik '+ptS(X0)+' berpindah ke '+ptS(XB)+'; garis bayangan '+letak+'.']});
+}
+
+/* ================= D. SOAL CERITA KONTEKS BONE (Tipe 20–23) ================= */
+function g20(rng,v){
+  var d=v==='a'?90:v==='b'?180:270,tr=pick(rng,[[3,4],[4,3],[6,8],[8,6]]),G={x:sgn(rng)*tr[0],y:sgn(rng)*tr[1]},r=tr[0]===3||tr[0]===4?5:10;
+  var B=rot(G,d),circ={c:[0,0],r:r,c2:'k'};
+  var v0=V({mk:[mkN(G,'a','G')],ctr:ctr(O0),circ:circ,seg:[seg(O0,G,'a',1)],cap:'Lingkaran putus-putus = lintasan kabin bianglala (satuan meter).'});
+  return mkQ(20,'M',v,{kko:'menerapkan',
+    soal:'Di pasar malam Lapangan Merdeka Watampone ada bianglala dengan pusat putaran di O(0, 0), satuan meter. Sebuah kabin berada di <b>G'+ptS(G)+'</b>. Bianglala berputar <b>'+degS(d)+'</b> berlawanan arah jarum jam. Tentukan posisi kabin sekarang.',
+    st:[F('Aturan','Aturan pemetaan rotasi '+degS(d)+' adalah …',[pgS(rng,'(x, y) dipetakan ke',ATURAN[d],DIS_ATURAN[d])],hAturan(d),v0),
+      FK('Posisi G′','Tulis posisi kabin G′.',[['G′',B]],['Gunakan aturan '+ATURAN[d]+' pada G'+ptS(G)+'.'],v0),
+      PT('Letak G′','Ketuk letak G′ pada bidang.',B,['Kabin tetap berada pada lingkaran lintasan.'],v0),
+      F('Jarak ke pusat','Berapa jarak kabin ke pusat putaran sesudah berputar?',[num('Jarak =',r,'m')],['Jarak = √(x² + y²). Rotasi tidak mengubah jarak ke pusat.'],V(v0,{mk:[mkN(G,'a','G'),mkN(B,'b','G′')],seg:[seg(O0,G,'a',1),seg(O0,B,'b',1)]}))],
+    vz:V(v0,{mk:[mkN(G,'a','G'),mkN(B,'b','G′')],seg:[seg(O0,G,'a',1),seg(O0,B,'b',1)],arc:arc(O0,G,d,'b')}),
+    bahas:['Rotasi '+degS(d)+': (x, y) → '+ATURAN[d]+', jadi G′'+ptS(B)+'.','Jarak sebelum = √('+nm(G.x)+'² + '+nm(G.y)+'²) = '+nm(r)+' m.','Jarak sesudah juga '+nm(r)+' m, karena rotasi tidak mengubah jarak ke pusat.']});
+}
+function g21(rng,v){
+  var d=v==='b'?270:90,m=pick(rng,[1,2,-1]),n;
+  do{n=rnz(rng,-4,4);}while(m===2&&n%2!==0);
+  var P1={x:0,y:n},P2_={x:rnd(-n/m),y:0},B1=rot(P1,d),B2=rot(P2_,d),q=dariYM(m,n),qb=rotLn(q,d),mb=rnd(-1/m),nb=rnd(d===90?-n/m:n/m);
+  var la=lnV(q,'a',ymS(m,n)),v0=V({ln:[la],ctr:ctr(O0),cap:'Garis biru = garis motif asal, garis jingga = garis motif hasil rotasi.'});
+  var v1=V(v0,{mk:[mk(P1,'a',ptS(P1)),mk(P2_,'a',ptS(P2_))]});
+  return mkQ(21,'H',v,{kko:'menganalisis',
+    soal:"Seorang penenun lipa' sabbe (sarung sutra Bugis) di Bone merancang motif pada kertas berpetak. Satu garis motif mengikuti persamaan <b>"+ymS(m,n)+'</b>. Untuk membuat motif silang, garis itu dirotasi <b>'+degS(d)+'</b> dengan pusat O. Tentukan persamaan garis bayangannya.',
+    st:[PS('Dua titik','Ketuk titik potong garis motif dengan sumbu-y dan sumbu-x.',[P1,P2_],['Substitusikan x = 0 untuk titik potong sumbu-y, lalu y = 0 untuk titik potong sumbu-x.'],v0),
+      FK('Bayangan titik','Tentukan bayangan kedua titik itu oleh rotasi '+degS(d)+'.',[['Bayangan '+ptS(P1),B1],['Bayangan '+ptS(P2_),B2]],['Gunakan aturan '+ATURAN[d]+'.'],v1),
+      F('Persamaan bayangan','Tulis persamaan bayangan dalam bentuk y = mx + n.',[num('m =',mb),num('n =',nb)],['m = (y₂ − y₁) : (x₂ − x₁) memakai kedua titik bayangan. n adalah ordinat titik potong dengan sumbu-y.'],V(v1,{mk:[mk(P1,'a',ptS(P1)),mk(P2_,'a',ptS(P2_)),mk(B1,'b',ptS(B1)),mk(B2,'b',ptS(B2))]})),
+      F('Kedudukan','Kedudukan kedua garis motif adalah …',[pgS(rng,'Kedua garis','tegak lurus, karena m₁ × m₂ = −1',['sejajar, karena gradiennya sama','berimpit'])],['Hitung m₁ × m₂ = '+nm(m)+' × ('+nm(mb)+').'],V(v1,{ln:[la,lnV(qb,'b',ymS(mb,nb))]}))],
+    vz:V(v0,{ln:[la,lnV(qb,'b',ymS(mb,nb))],mk:[mk(B1,'b',ptS(B1)),mk(B2,'b',ptS(B2))]}),
+    bahas:['Titik potong: '+ptS(P1)+' dan '+ptS(P2_)+'.','Bayangannya '+ptS(B1)+' dan '+ptS(B2)+', sehingga garis bayangan '+ymS(mb,nb)+'.','m₁ × m₂ = '+nm(m)+' × ('+nm(mb)+') = −1, jadi kedua garis motif tegak lurus.']});
+}
+function g22(rng){
+  var n=pick(rng,[2,3,1]),k=n===1?2:1/n,T,w,h;
+  for(var i=0;i<200;i++){
+    var lim=n===1?4:9,st=n===1?1:n;
+    var x1=st*ri(rng,Math.ceil(-lim/st),Math.floor(lim/st)),x2=st*ri(rng,Math.ceil(-lim/st),Math.floor(lim/st));
+    var y1=st*ri(rng,Math.ceil(-lim/st),Math.floor(lim/st)),y2=st*ri(rng,Math.ceil(-lim/st),Math.floor(lim/st));
+    if(x2<=x1||y2<=y1)continue;w=x2-x1;h=y2-y1;if(w<h||w===h)continue;
+    if(n!==1&&w*k<2)continue;
+    T=persegi(x1,y1,w,h);break;
+  }
+  if(!T){k=0.5;T=persegi(-4,-2,8,4);w=8;h=4;}
+  var B=T.map(function(X){return dil(X,k);}),W=rnd(w*k),H=rnd(h*k),ol=opsiLuas(k);
+  var nmA=['P','Q','R','S'],nmB=['P′','Q′','R′','S′'],pa=poly(T,'a',nmA);
+  var v0=V({poly:[pa],ctr:ctr(O0),cap:'Biru = denah pada spanduk, jingga = denah pada '+(k<1?'brosur':'baliho')+'.'}),v1=V(v0,{poly:[pa,poly(B,'b',nmB)]});
+  var verb=k<1?'dikecilkan':'diperbesar',md=k<1?'brosur':'baliho';
+  return mkQ(22,'M','a',{kko:'menghitung',
+    soal:'Denah dermaga Pelabuhan Bajoe pada spanduk berbentuk persegi panjang dengan titik sudut <b>P'+ptS(T[0])+', Q'+ptS(T[1])+', R'+ptS(T[2])+', S'+ptS(T[3])+'</b>. Untuk brosur, denah '+verb+' dengan pusat O dan faktor skala <b>'+nm(k)+'</b>. Tentukan luas denah pada '+md+'.',
+    st:[PS('Titik bayangan','Ketuk keempat titik sudut denah pada '+md+' (P′, Q′, R′, S′).',B,['Kalikan setiap koordinat titik sudut dengan '+nm(k)+'.'],v0),
+      F('Panjang P′Q′','Hitung panjang P′Q′.',[num('P′Q′ =',W)],['Hitung selisih absis P′ dan Q′.'],v1),
+      F('Lebar Q′R′','Hitung lebar Q′R′.',[num('Q′R′ =',H)],['Hitung selisih ordinat Q′ dan R′.'],v1),
+      F('Luas '+md,'Hitung luas denah pada '+md+' (satuan luas).',[num('Luas =',W*H)],['Luas = panjang × lebar.'],v1),
+      F('Perbandingan luas','Luas pada '+md+' : luas pada spanduk sama dengan …',[pgS(rng,'Perbandingan',ol.key,ol.dis)],['Luas pada spanduk = '+nm(w)+' × '+nm(h)+' = '+nm(w*h)+'.'],v1)],
+    vz:v1,
+    bahas:['Titik sudut pada '+md+': '+B.map(ptS).join(', ')+'.','Panjang '+nm(W)+', lebar '+nm(H)+', luas '+nm(W*H)+' satuan luas.','Luas spanduk '+nm(w*h)+'; perbandingannya '+nm(rnd(W*H/(w*h)))+' = k².']});
+}
+function g23(rng){
+  var k=pick(rng,[2,3]),X0,Y0;
+  do{X0=rnz(rng,-3,3);Y0=rnz(rng,-3,3);}while(Math.abs(k*X0)>9||Math.abs(k*Y0)>9);
+  var g=gcd(X0,Y0),a=Y0/g,b=X0/g,c=-X0*Y0/g;if(a<0){a=-a;b=-b;c=-c;}
+  var q=L(a,b,-c),qb=dilLn(q,k),PX={x:X0,y:0},PY={x:0,y:Y0},BX={x:k*X0,y:0},BY={x:0,y:k*Y0};
+  var la=lnV(q,'a','jalan asal'),v0=V({ln:[la],ctr:ctr(O0,'O'),cap:'Garis biru = jalan pada peta, garis jingga = jalan pada poster. O = Lapangan Merdeka.'});
+  return mkQ(23,'H','a',{kko:'menyelesaikan',
+    soal:'Peta Kota Watampone digambar pada bidang kartesius dengan O di Lapangan Merdeka. Jalan lurus menuju Pelabuhan Bajoe digambarkan oleh garis <b>'+zeroS(a,b,c)+'</b>. Agar jelas di poster, peta diperbesar dengan pusat O dan faktor skala <b>'+nm(k)+'</b>. Tentukan persamaan jalan pada poster.',
+    st:[FK('Titik potong','Tentukan titik potong jalan asal dengan sumbu-x dan sumbu-y.',[['Dengan sumbu-x',PX],['Dengan sumbu-y',PY]],['Sumbu-x: substitusikan y = 0. Sumbu-y: substitusikan x = 0.'],v0),
+      PS('Bayangan titik potong','Ketuk bayangan kedua titik potong itu pada poster.',[BX,BY],['Kalikan koordinat '+ptS(PX)+' dan '+ptS(PY)+' dengan '+nm(k)+'.'],V(v0,{mk:[mk(PX,'a',ptS(PX)),mk(PY,'a',ptS(PY))]})),
+      F('Persamaan poster','Persamaan jalan pada poster berbentuk '+sum([[a,'x'],[b,'y']])+' + c = 0. Berapa c?',[num('c =',k*c)],['Substitusikan salah satu titik bayangan, misalnya '+ptS(BX)+', ke '+sum([[a,'x'],[b,'y']])+' + c = 0.'],V(v0,{mk:[mk(BX,'b',ptS(BX)),mk(BY,'b',ptS(BY))]})),
+      F('Kedudukan','Kedudukan jalan pada poster terhadap jalan asal (digambar di bidang yang sama) adalah …',[pgS(rng,'Kedudukan','sejajar',KED)],['Dilatasi dengan pusat O tidak mengubah gradien garis.'],V(v0,{ln:[la,lnV(qb,'b','jalan poster')]}))],
+    vz:V(v0,{ln:[la,lnV(qb,'b','jalan poster')],mk:[mk(BX,'b',ptS(BX)),mk(BY,'b',ptS(BY))]}),
+    bahas:['Titik potong jalan asal: '+ptS(PX)+' dan '+ptS(PY)+'.','Bayangannya '+ptS(BX)+' dan '+ptS(BY)+', sehingga jalan pada poster '+zeroS(a,b,k*c)+'.','Gradiennya tetap, jadi jalan pada poster sejajar dengan jalan asal.']});
+}
+
+/* ================= E. KOMPOSISI (Tipe 24) ================= */
+function g24(rng,v){
+  var d=pick(rng,[90,180,270]),k=pick(rng,[-2,2,0.5]),A=k===0.5?{x:2*rnz(rng,-2,2),y:2*rnz(rng,-2,2)}:titik(rng,4);
+  var duluRot=v!=='b',M=duluRot?rot(A,d):dil(A,k),B=duluRot?dil(M,k):rot(M,d);
+  var t1=duluRot?'dirotasi '+degS(d)+' dengan pusat O':'didilatasi dengan pusat O dan faktor skala '+nm(k);
+  var t2=duluRot?'didilatasi dengan pusat O dan faktor skala '+nm(k):'dirotasi '+degS(d)+' dengan pusat O';
+  var v0=V({mk:[mkN(A,'a','A')],ctr:ctr(O0),cap:'Biru = titik asal, ungu = bayangan pertama, jingga = bayangan akhir.'});
+  var v1=V(v0,{mk:[mkN(A,'a','A'),mkN(M,'m','A′')]});
+  return mkQ(24,'H',v,{kko:'menyelesaikan',
+    soal:'Titik <b>A'+ptS(A)+'</b> '+t1+', kemudian '+t2+'. Tentukan bayangan akhirnya.',
+    st:[FK('Bayangan pertama','Tentukan bayangan A setelah '+(duluRot?'rotasi':'dilatasi')+' (A′).',[['A′',M]],[duluRot?'Rotasi '+degS(d)+': (x, y) → '+ATURAN[d]+'.':'Dilatasi: kalikan kedua koordinat dengan '+nm(k)+'.'],v0),
+      PT('Letak A′','Ketuk letak A′.',M,['A′ adalah hasil langkah sebelumnya.'],v0),
+      FK('Bayangan akhir','Tentukan bayangan A′ setelah '+(duluRot?'dilatasi':'rotasi')+' (A″).',[['A″',B]],['Bayangan pertama menjadi titik asal untuk transformasi kedua.',duluRot?'Kalikan kedua koordinat A′ dengan '+nm(k)+'.':'Gunakan aturan '+ATURAN[d]+' pada A′.'],v1),
+      PT('Letak A″','Ketuk letak A″.',B,['A″ adalah hasil langkah sebelumnya.'],v1)],
+    vz:V(v1,{mk:[mkN(A,'a','A'),mkN(M,'m','A′'),mkN(B,'b','A″')]}),
+    bahas:[(duluRot?'Rotasi '+degS(d):'Dilatasi k = '+nm(k))+': A'+ptS(A)+' → A′'+ptS(M)+'.',(duluRot?'Dilatasi k = '+nm(k):'Rotasi '+degS(d))+': A′'+ptS(M)+' → A″'+ptS(B)+'.','Karena kedua transformasi berpusat di O, urutannya boleh dibalik dan hasilnya sama.']});
+}
+
+/* ---------- pemilih pembangkit ---------- */
+var GEN={1:g1,2:g2,3:g3,4:g4,5:g5,6:g6,7:g7,8:g8,9:g9,10:g10,11:g11,12:g12,13:g13,14:g14,
+  15:g15,16:g16,17:g17,18:g18,19:g19,20:g20,21:g21,22:g22,23:g23,24:g24};
+var VARS={
+  '1L':['a'],'2L':['a'],'3M':['a','b','c'],'4M':['a','b','c'],'5H':['a','b','c'],'6H':['a','b','c'],'7H':['a','b','c'],
+  '8L':['a'],'9L':['a'],'10M':['a'],'11M':['a'],'12M':['a','b'],'13M':['a'],'14H':['a'],
+  '15M':['a'],'16H':['a','b'],'17M':['a'],'17H':['b'],'18M':['a'],'19H':['a'],
+  '20M':['a','b','c'],'21H':['a','b'],'22M':['a'],'23H':['a'],'24H':['a','b']
+};
+var VARS_LATIHAN={};   /* varian khusus Latihan Mandiri (belum ada) */
+function levels(t){return (LV_TIPE[t]||'').split('');}
+function variants(t,l,latihan){var k=t+l;return (VARS[k]||[]).concat(latihan&&VARS_LATIHAN[k]?VARS_LATIHAN[k]:[]);}
+function gen(t,l,rng,latihan,v){
+  if(!l||levels(t).indexOf(l)<0)l=levels(t)[0];
+  if(!v)v=pick(rng,variants(t,l,latihan));
+  return GEN[t](rng,v);
+}
+
+/* Satu "paket kuis" ditentukan sepenuhnya oleh benih (seed): 12 soal sesuai SUSUNAN_KUIS.
+   Varian setiap soal dipilih acak dari benih yang sama. */
+var SUSUNAN_KUIS=[[1,'L'],[3,'M'],[5,'H'],[6,'H'],[9,'L'],[10,'M'],[12,'M'],[16,'H'],[18,'M'],[20,'M'],[22,'M'],[24,'H']];
+function buildPack(seed){
+  var rng=mulberry32(seed),set=[];
+  SUSUNAN_KUIS.forEach(function(x){set.push(gen(x[0],x[1],rng,false,x[2]));});
+  return {seed:seed,set:set};
+}
+
+/* ---------- penilai jejak jawaban ----------
+   jejak = daftar peristiwa {p,s,a,t}: p = nomor soal, s = nomor langkah, a = jawaban mentah,
+   t = waktu (ms sejak mulai). Hanya jawaban mentah yang dipercaya; benar-salahnya dihitung ulang di sini.
+   Setiap langkah paling banyak MAKS_COBA percobaan: benar ke-1 = 2 poin, benar ke-2 = 1 poin, salah dua kali = 0.
+   Jawaban berformat tidak sah diabaikan, tidak dihitung percobaan. */
+function posLangkah(Qs,c){
+  for(var p=0;p<Qs.length;p++){if(c<Qs[p].st.length)return {p:p,s:c};c-=Qs[p].st.length;}
+  return {p:Qs.length,s:0};
+}
+function gradeTrace(pack,trace){
+  var Qs=pack.set,ev=Array.isArray(trace)?trace:[],total=0;
+  Qs.forEach(function(Q){total+=Q.st.length;});
+  var c=0,tries=0,score=0,ignored=0,steps=[],missed={},lastT=0,mono=true,rinci={};
+  RINCI.forEach(function(k){rinci[k]=[0,0];});
+  Qs.forEach(function(Q){rinci[Q.bg][1]+=2*Q.st.length;rinci[LEVEL[Q.l]][1]+=2*Q.st.length;});
+  function close(pts){
+    var ps=posLangkah(Qs,c),Q=Qs[ps.p],S=Q.st[ps.s];
+    steps.push(pts);score+=pts;rinci[Q.bg][0]+=pts;rinci[LEVEL[Q.l]][0]+=pts;
+    if(pts<2){var k='Tipe '+Q.t+' · '+S.nm;missed[k]=(missed[k]||0)+1;}
+    c++;tries=0;
+  }
+  for(var k=0;k<ev.length;k++){
+    var e=ev[k];
+    if(!e||typeof e!=='object'){ignored++;continue;}
+    if(isNum(e.t)){if(e.t<lastT)mono=false;else lastT=e.t;}
+    if(c>=total){ignored++;continue;}
+    var ps=posLangkah(Qs,c),p=ps.p,s=ps.s;
+    if(e.p!==p||e.s!==s||!valid(Qs[p],s,e.a)){ignored++;continue;}
+    tries++;
+    if(judge(Qs[p],s,e.a).ok)close(tries===1?2:1);
+    else if(tries>=MAKS_COBA)close(0);
+  }
+  var now=posLangkah(Qs,c);
+  return {score:score,max:total*2,done:c,total:total,p:now.p,s:now.s,complete:c===total,tries:tries,ignored:ignored,steps:steps,missed:missed,rinci:rinci,monotonic:mono,lastT:lastT};
+}
+
+/* ---------- sidik jari kode: halaman dan server harus menghasilkan nilai yang sama ---------- */
+function djb2(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(16);}
+function semuaVarian(){var o=[];for(var t=1;t<=24;t++)levels(t).forEach(function(l){variants(t,l,true).forEach(function(v){o.push([t,l,v]);});});return o;}
+function cek(){
+  var pk=buildPack(20261102),rng=mulberry32(7),vs=[],sm=[],t=0;
+  semuaVarian().forEach(function(x){vs.push(gen(x[0],x[1],rng,true,x[2]));});
+  pk.set.forEach(function(Q,p){
+    for(var s=0;s<Q.st.length;s++){
+      var m=(p+s)%3;
+      if(m===0){sm.push({p:p,s:s,a:wrongAns(Q,s),t:++t});sm.push({p:p,s:s,a:keyAns(Q,s),t:++t});}
+      else if(m===1){sm.push({p:p,s:s,a:null,t:++t});sm.push({p:p,s:s,a:keyAns(Q,s),t:++t});}
+      else{sm.push({p:p,s:s,a:wrongAns(Q,s),t:++t});sm.push({p:p,s:s,a:wrongAns(Q,s),t:++t});}
+    }
+  });
+  sm.push({p:99,s:9,a:1,t:++t});
+  var vj=vs.map(function(Q){return Q.st.map(function(S,s){return [judge(Q,s,keyAns(Q,s)).ok,judge(Q,s,wrongAns(Q,s)).ok];});});
+  return VERSI+':'+djb2(JSON.stringify({pk:pk,vs:vs,vj:vj,g:gradeTrace(pk,sm)}));
+}
+
+/* ---------- uji mandiri: CORE.uji() di konsol ----------
+   Membangkitkan setiap varian berkali-kali dan memeriksa: kunci dinilai benar, jawaban salah dinilai salah,
+   titik jawaban di dalam bidang, pilihan ganda tanpa opsi kembar, dan tidak ada NaN/undefined pada teks. */
+function uji(n){
+  n=n||300;var lap=[],rng=mulberry32(2026);
+  semuaVarian().forEach(function(x){
+    for(var i=0;i<n;i++){
+      var Q=gen(x[0],x[1],rng,true,x[2]),id='T'+x[0]+x[1]+x[2]+'#'+i;
+      if(/NaN|undefined|Infinity|null/.test(JSON.stringify(Q)))lap.push(id+' teks tidak sah');
+      Q.st.forEach(function(S,s){
+        var ka=keyAns(Q,s),wa=wrongAns(Q,s);
+        if(!valid(Q,s,ka))lap.push(id+' L'+(s+1)+' kunci tidak sah '+JSON.stringify(ka));
+        else if(!judge(Q,s,ka).ok)lap.push(id+' L'+(s+1)+' kunci dinilai salah');
+        if(valid(Q,s,wa)&&judge(Q,s,wa).ok)lap.push(id+' L'+(s+1)+' jawaban salah dinilai benar');
+        if(S.k==='form')S.it.forEach(function(it){
+          if(it.t==='pg'){if(it.o.length<2)lap.push(id+' L'+(s+1)+' opsi kurang');if(it.o.some(function(o,j){return it.o.indexOf(o)!==j;}))lap.push(id+' L'+(s+1)+' opsi kembar');}
+        });
+      });
+    }
+  });
+  return lap.length?lap.slice(0,40):'Semua soal aman.';
+}
+
+return {VERSI:VERSI,OPS:OPS,MAKS_COBA:MAKS_COBA,NSOAL:NSOAL,NLANGKAH:NLANGKAH,TIPE:TIPE,LEVEL:LEVEL,LV_TIPE:LV_TIPE,
+  BAGIAN:BAGIAN,BG_TIPE:BG_TIPE,RINCI:RINCI,RLAB:RLAB,FULL:FULL,
+  isSolid:isSolid,holds:holds,flipOp:flipOp,gcd:gcd,mulberry32:mulberry32,
+  nm:nm,rp:rp,lin:lin,eqS:eqS,ineqS:ineqS,zeroS:zeroS,ymS:ymS,sum:sum,ptS:ptS,L:L,norm:norm,
+  rot:rot,dil:dil,rotLn:rotLn,dilLn:dilLn,ATURAN:ATURAN,SUBST:SUBST,
+  levels:levels,variants:variants,gen:gen,buildPack:buildPack,posLangkah:posLangkah,SUSUNAN_KUIS:SUSUNAN_KUIS,
+  valid:valid,judge:judge,judgePt:judgePt,keyAns:keyAns,wrongAns:wrongAns,gradeTrace:gradeTrace,cek:cek,uji:uji};
+})();
+
+</script>
+<script>
+/* ==========================================================================
+   komponen.js · KOMPONEN BERSAMA
+   Dipakai oleh semua tab. Tidak berisi logika khusus satu tab.
+   - PL.U        : utilitas kecil (pilih elemen, format angka)
+   - PL.Bidang   : bidang koordinat (titik, bangun, garis, busur rotasi); satu instans per tab
+   - PL.Plus     : maskot Plus (berbicara, menunjuk elemen atau titik bidang)
+   - PL.Math     : perender rumus KaTeX dengan teks cadangan
+   - PL.Langkah  : penampil langkah soal; dipakai Latihan Mandiri dan Kuis dengan opsi berbeda
+   ========================================================================== */
+(function(PL){
+'use strict';
+var U=PL.U={};
+var $=U.$=function(s,r){return (r||document).querySelector(s);};
+U.$$=function(s,r){return [].slice.call((r||document).querySelectorAll(s));};
+U.esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+U.nm=CORE.nm;U.rp=CORE.rp;U.ptS=CORE.ptS;U.ineqS=CORE.ineqS;U.eqS=CORE.eqS;U.lin=CORE.lin;U.Lq=CORE.L;U.zeroS=CORE.zeroS;U.ymS=CORE.ymS;
+U.frac=CORE.nm;   /* ½, ⅓, 2,5, −4 */
+U.seed=function(){return Math.floor(Math.random()*2147483646)+1;};
+var esc=U.esc,nm=U.nm,ptS=U.ptS,lin=U.lin,Lq=U.Lq,frac=U.frac;
+var COL=PL.COL=['#1d4ed8','#c2410c','#7e22ce','#0f766e'];
+function modeNow(){return document.body.dataset.mode||'belajar';}
+PL.mode=modeNow;
+
+/* ---------- PL.Bidang: bidang koordinat berskala ----------
+   var b=PL.Bidang(svgEl, capEl);  b.gambar(V);  b.klik(e) → {mx,my,vx,vy};  b.tempel(c) → titik kisi
+   V = {B (kotak bidang), mk:[{x,y,c,l,h}], poly:[{p:[[x,y]…],c,l:[nama titik]}], seg:[{a:[x,y],b:[x,y],c,d}],
+        arc:{c:[x,y],a:[x,y],deg,col}, circ:{c:[x,y],r}, ln:[{a,b,c,col,l}], ctr:{x,y,l},
+        sel:[titik terpilih], pick:titik, click:bool, cap:teks}
+   Kode warna: a = asal (biru), b = bayangan (jingga), m = antara (ungu), k = hitam, g = hijau, r = merah. */
+var KC={a:'#1d4ed8',b:'#c2410c',m:'#7e22ce',k:'#1b2a41',g:'#15803d',r:'#b91c1c',o:'#b45309',c:'#92400e'};
+var KF={a:'rgba(29,78,216,.13)',b:'rgba(194,65,12,.16)',m:'rgba(126,34,206,.14)',k:'rgba(27,42,65,.08)',g:'rgba(21,128,61,.16)'};
+var CAP_BAWAAN='Biru = asal, jingga = bayangan.';
+PL.Bidang=function(svg,cap){
+  var N=460,MG=30,PB=CORE.FULL,PK=(N-2*MG)/20;
+  function setBox(B){PB=B;PK=(N-2*MG)/(B.x1-B.x0);}
+  function sx(x){return MG+(x-PB.x0)*PK;}
+  function sy(y){return N-MG-(y-PB.y0)*PK;}
+  function f1(v){return (+v).toFixed(1);}
+  function lineEnds(q,B){
+    var pts=[],u=[],e=1e-9;
+    if(q.b!==0)[B.x0,B.x1].forEach(function(x){var y=(q.c-q.a*x)/q.b;if(y>=B.y0-e&&y<=B.y1+e)pts.push([x,y]);});
+    if(q.a!==0)[B.y0,B.y1].forEach(function(y){var x=(q.c-q.b*y)/q.a;if(x>=B.x0-e&&x<=B.x1+e)pts.push([x,y]);});
+    pts.forEach(function(p){if(!u.some(function(r){return Math.abs(r[0]-p[0])<1e-6&&Math.abs(r[1]-p[1])<1e-6;}))u.push(p);});
+    return u.length>=2?[u[0],u[1]]:null;
+  }
+  function polyS(poly){return poly.map(function(p){return f1(sx(p[0]))+','+f1(sy(p[1]));}).join(' ');}
+  function teks(X,Y,t,col,anc){return '<text class="lbl" x="'+f1(X)+'" y="'+f1(Y)+'" text-anchor="'+(anc||'start')+'" style="fill:'+col+'">'+esc(t)+'</text>';}
+  function ptLbl(p,t,col){var X=sx(p.x),Y=sy(p.y),rt=X>330,up=Y>40;return teks(rt?X-10:X+10,up?Y-10:Y+20,t,col,rt?'end':'start');}
+  function warna(c){return KC[c]||KC.k;}
+  function gambar(V){
+    V=V||{};var B=V.B||CORE.FULL;setBox(B);
+    var s='',i,g=B.g||1,lb=B.lb||g,id=svg.id;
+    s+='<defs>'+['k','a','b','m'].map(function(c){return '<marker id="ar'+c+'-'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="'+warna(c)+'"/></marker>';}).join('')+'</defs>';
+    s+='<rect width="'+N+'" height="'+N+'" fill="#fff"/><g stroke="#dbe4f3" stroke-width="1">';
+    for(i=Math.ceil(B.x0/g)*g;i<=B.x1+1e-9;i+=g)s+='<line x1="'+f1(sx(i))+'" y1="'+f1(sy(B.y0))+'" x2="'+f1(sx(i))+'" y2="'+f1(sy(B.y1))+'"/>';
+    for(i=Math.ceil(B.y0/g)*g;i<=B.y1+1e-9;i+=g)s+='<line x1="'+f1(sx(B.x0))+'" y1="'+f1(sy(i))+'" x2="'+f1(sx(B.x1))+'" y2="'+f1(sy(i))+'"/>';
+    s+='</g>';
+    s+='<line x1="'+f1(sx(B.x0)-4)+'" y1="'+f1(sy(0))+'" x2="'+f1(sx(B.x1)+14)+'" y2="'+f1(sy(0))+'" stroke="#1b2a41" stroke-width="2" marker-end="url(#ark-'+id+')"/>';
+    s+='<line x1="'+f1(sx(0))+'" y1="'+f1(sy(B.y0)+4)+'" x2="'+f1(sx(0))+'" y2="'+f1(sy(B.y1)-14)+'" stroke="#1b2a41" stroke-width="2" marker-end="url(#ark-'+id+')"/>';
+    s+='<text class="lbl" x="'+f1(sx(B.x1)+10)+'" y="'+f1(sy(0)+20)+'" style="font-style:italic">x</text><text class="lbl" x="'+f1(sx(0)+9)+'" y="'+f1(sy(B.y1)-4)+'" style="font-style:italic">y</text>';
+    for(i=Math.ceil(B.x0/lb)*lb;i<=B.x1-1e-9;i+=lb){if(i===0)continue;s+='<text class="tick" x="'+f1(sx(i))+'" y="'+f1(sy(0)+16)+'" text-anchor="middle">'+nm(i)+'</text>';}
+    for(i=Math.ceil(B.y0/lb)*lb;i<=B.y1-1e-9;i+=lb){if(i===0)continue;s+='<text class="tick" x="'+f1(sx(0)-6)+'" y="'+f1(sy(i)+4)+'" text-anchor="end">'+nm(i)+'</text>';}
+    s+='<text class="tick" x="'+f1(sx(0)-6)+'" y="'+f1(sy(0)+16)+'" text-anchor="end">0</text>';
+    /* lingkaran lintasan */
+    if(V.circ){var cc=V.circ;s+='<circle cx="'+f1(sx(cc.c[0]))+'" cy="'+f1(sy(cc.c[1]))+'" r="'+f1(cc.r*PK)+'" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 6"/>';}
+    /* bangun */
+    (V.poly||[]).forEach(function(P){
+      var col=warna(P.c);
+      s+='<polygon points="'+polyS(P.p)+'" fill="'+(KF[P.c]||KF.k)+'" stroke="'+col+'" stroke-width="3" stroke-linejoin="round"/>';
+      P.p.forEach(function(q,j){
+        s+='<circle cx="'+f1(sx(q[0]))+'" cy="'+f1(sy(q[1]))+'" r="4.5" fill="'+col+'" stroke="#fff" stroke-width="1.5"/>';
+        if(P.l&&P.l[j]){
+          /* label di luar bangun: menjauh dari titik tengah */
+          var cx=0,cy=0;P.p.forEach(function(r){cx+=r[0];cy+=r[1];});cx/=P.p.length;cy/=P.p.length;
+          var dx=q[0]-cx,dy=q[1]-cy,L=Math.sqrt(dx*dx+dy*dy)||1,X=sx(q[0])+dx/L*15,Y=sy(q[1])-dy/L*15+5;
+          s+=teks(X,Y,P.l[j],col,'middle');
+        }
+      });
+    });
+    /* garis */
+    (V.ln||[]).forEach(function(Ln){
+      var e=lineEnds(Ln,B);if(!e)return;var col=warna(Ln.col);
+      s+='<line x1="'+f1(sx(e[0][0]))+'" y1="'+f1(sy(e[0][1]))+'" x2="'+f1(sx(e[1][0]))+'" y2="'+f1(sy(e[1][1]))+'" stroke="'+col+'" stroke-width="3.5" stroke-linecap="round"'+(Ln.d?' stroke-dasharray="10 7"':'')+'/>';
+      if(Ln.l){
+        var E=e[0][1]>e[1][1]||(e[0][1]===e[1][1]&&e[0][0]>e[1][0])?e[0]:e[1],O=E===e[0]?e[1]:e[0];
+        var lx=sx(E[0]+0.08*(O[0]-E[0])),ly=sy(E[1]+0.08*(O[1]-E[1])),rt=lx>300;
+        s+=teks(rt?lx-6:lx+7,ly+(ly<30?16:-6),Ln.l,col,rt?'end':'start');
+      }
+    });
+    /* ruas bantu */
+    (V.seg||[]).forEach(function(G){
+      s+='<line x1="'+f1(sx(G.a[0]))+'" y1="'+f1(sy(G.a[1]))+'" x2="'+f1(sx(G.b[0]))+'" y2="'+f1(sy(G.b[1]))+'" stroke="'+warna(G.c)+'" stroke-width="2"'+(G.d?' stroke-dasharray="5 5"':'')+' opacity=".75"/>';
+    });
+    /* busur rotasi: dari titik a, mengelilingi pusat c sejauh deg (positif = berlawanan arah jarum jam) */
+    if(V.arc){
+      var A=V.arc,C=A.c,dx0=A.a[0]-C[0],dy0=A.a[1]-C[1],r=Math.sqrt(dx0*dx0+dy0*dy0);
+      if(r>0){
+        var a0=Math.atan2(dy0,dx0),tot=A.deg*Math.PI/180,n=Math.max(12,Math.ceil(Math.abs(A.deg)/6)),d='',rr=Math.max(r*0.55,Math.min(r,1.6));
+        for(i=0;i<=n;i++){var t=a0+tot*i/n;d+=(i?'L':'M')+f1(sx(C[0]+rr*Math.cos(t)))+' '+f1(sy(C[1]+rr*Math.sin(t)));}
+        var ac=A.col||'k';
+        s+='<path d="'+d+'" fill="none" stroke="'+warna(ac)+'" stroke-width="2.5" marker-end="url(#ar'+ac+'-'+id+')"/>';
+        var tm=a0+tot/2,lr=rr*PK+16;
+        s+=teks(sx(C[0])+lr*Math.cos(tm),sy(C[1])-lr*Math.sin(tm)+5,Math.abs(A.deg)+'°'+(A.deg<0?' ↻':''),warna(ac),'middle');
+      }
+    }
+    /* pusat */
+    if(V.ctr){var Ct=V.ctr,X0=sx(Ct.x),Y0=sy(Ct.y);
+      s+='<rect x="'+f1(X0-5)+'" y="'+f1(Y0-5)+'" width="10" height="10" fill="#1b2a41" stroke="#fff" stroke-width="2" transform="rotate(45 '+f1(X0)+' '+f1(Y0)+')"/>';
+      if(Ct.l&&!(Ct.x===0&&Ct.y===0&&Ct.l==='O'))s+=ptLbl(Ct,Ct.l,'#1b2a41');}
+    /* titik */
+    (V.mk||[]).forEach(function(m){
+      var col=warna(m.c),X=sx(m.x),Y=sy(m.y);
+      s+='<circle cx="'+f1(X)+'" cy="'+f1(Y)+'" r="'+(m.h?6:5.5)+'" fill="'+(m.h?'#fff':col)+'" stroke="'+(m.h?col:'#fff')+'" stroke-width="'+(m.h?3:2)+'"/>';
+      if(m.l)s+=ptLbl(m,m.l,col);
+    });
+    /* titik yang dipilih siswa (langkah pilih beberapa titik) */
+    (V.sel||[]).forEach(function(p){
+      var X=sx(p.x),Y=sy(p.y);
+      s+='<circle cx="'+f1(X)+'" cy="'+f1(Y)+'" r="13" fill="rgba(245,158,11,.22)" stroke="#f59e0b" stroke-width="3"/><circle cx="'+f1(X)+'" cy="'+f1(Y)+'" r="5" fill="#b45309" stroke="#fff" stroke-width="2"/>'+ptLbl(p,ptS(p),'#b45309');
+    });
+    if(V.pick){var P=V.pick,X2=sx(P.x),Y2=sy(P.y);s+='<circle cx="'+f1(X2)+'" cy="'+f1(Y2)+'" r="14" fill="rgba(245,158,11,.25)" stroke="#f59e0b" stroke-width="3"/><circle cx="'+f1(X2)+'" cy="'+f1(Y2)+'" r="5.5" fill="#b45309" stroke="#fff" stroke-width="2"/>'+ptLbl(P,ptS(P),'#b45309');}
+    svg.innerHTML=s;
+    svg.classList.toggle('pickable',!!V.click);
+    if(cap)cap.innerHTML=esc(V.cap||CAP_BAWAAN)+(V.click?' <b>Ketuk bidang untuk memilih titik.</b>':'');
+  }
+  return {
+    gambar:gambar,
+    /* posisi klik → koordinat bidang */
+    klik:function(e){var r=svg.getBoundingClientRect();var vx=(e.clientX-r.left)/r.width*N,vy=(e.clientY-r.top)/r.height*N;return {vx:vx,vy:vy,mx:PB.x0+(vx-MG)/PK,my:PB.y0+(N-MG-vy)/PK};},
+    /* titik kisi terdekat */
+    tempel:function(c){var g=PB.g||1,x=Math.round(c.mx/g)*g,y=Math.round(c.my/g)*g;return {x:Math.max(PB.x0,Math.min(PB.x1,x))+0,y:Math.max(PB.y0,Math.min(PB.y1,y))+0};},
+    /* koordinat bidang → piksel di layar (untuk penunjuk Plus) */
+    layar:function(x,y){var mm=svg.getScreenCTM();if(!mm)return null;var p=svg.createSVGPoint();p.x=sx(x);p.y=sy(y);p=p.matrixTransform(mm);return {x:p.x,y:p.y};},
+    vx:sx,vy:sy,svg:svg,N:N
+  };
+};
+/* ---------- Maskot "Plus" ---------- */
+/* Tampilan maskot (SVG) disisipkan di sini agar index.html dan kuis.html tidak perlu
+   memuat salinan yang sama. Harus terjadi sebelum #plusToggle diberi perilaku di bawah. */
+if(!$('#plusWrap'))document.body.insertAdjacentHTML('beforeend',''
+  +'<div id="plusWrap" data-mood="normal">'
+  +'<div id="plusBubble" role="status" aria-live="polite"></div>'
+  +'<div id="plusBody">'
+  +'<svg viewBox="0 0 140 130" aria-hidden="true" focusable="false">'
+  +'<ellipse cx="70" cy="122" rx="30" ry="4" fill="#1b2a41" opacity=".13"/>'
+  +'<g id="plusChar">'
+  +'<g id="armL"><line x1="30" y1="64" x2="15" y2="85" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"/><circle cx="15" cy="85" r="7.5" fill="#e0ecff" stroke="#1d4ed8" stroke-width="3"/></g>'
+  +'<g id="armR"><line x1="110" y1="64" x2="125" y2="85" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"/><circle cx="125" cy="85" r="7.5" fill="#e0ecff" stroke="#1d4ed8" stroke-width="3"/></g>'
+  +'<polygon points="49,34 91,34 91,51 108,51 108,93 91,93 91,110 49,110 49,93 32,93 32,51 49,51" fill="#1d4ed8" stroke="#1d4ed8" stroke-width="8" stroke-linejoin="round"/>'
+  +'<circle cx="47" cy="82" r="4.5" fill="#f9a8d4" opacity=".75"/><circle cx="93" cy="82" r="4.5" fill="#f9a8d4" opacity=".75"/>'
+  +'<g class="eye"><circle cx="59" cy="70" r="9" fill="#fff"/><circle cx="59" cy="71.5" r="4.8" fill="#1b2a41"/><circle cx="60.8" cy="69.5" r="1.5" fill="#fff"/></g>'
+  +'<g class="eye"><circle cx="81" cy="70" r="9" fill="#fff"/><circle cx="81" cy="71.5" r="4.8" fill="#1b2a41"/><circle cx="82.8" cy="69.5" r="1.5" fill="#fff"/></g>'
+  +'<path class="eyeH" d="M51 72Q59 61 67 72M73 72Q81 61 89 72" stroke="#fff" stroke-width="4.5" stroke-linecap="round" fill="none"/>'
+  +'<path class="brow" d="M50 58L68 53M72 53L90 58" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>'
+  +'<path class="mN" d="M63 82Q70 90 77 82" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>'
+  +'<path class="mH" d="M62 80Q70 97 78 80Z" fill="#fff" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>'
+  +'<path class="mS" d="M63 88Q70 80 77 88" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>'
+  +'</g>'
+  +'</svg>'
+  +'<div id="plusConf"></div>'
+  +'</div>'
+  +'</div>'
+  +'<button id="plusToggle" type="button" title="Sembunyikan Plus" aria-label="Sembunyikan Plus">✕</button>');
+var PLUS={
+  benar:['Hebat! Kamu benar!','Mantap, lanjut terus!','Tepat sekali! Keren!','Yeay, jawabanmu benar!','Pintar! Pertahankan ya!'],
+  salah:['Belum tepat, coba lagi ya!','Tenang, kamu pasti bisa!','Hampir! Ayo coba sekali lagi!','Salah itu bagian belajar!','Jangan menyerah, semangat!'],
+  sapaL:['Halo! Aku Plus, ayo berputar dan membesar!','Hai! Pilih soal, lalu mulai ya!'],
+  sapaP:['Siap kuis? Semangat ya!','Ayo, kamu pasti bisa!'],
+  petunjuk:['Baca petunjuk di panel ya!','Petunjuknya ada di sini, lho!'],
+  selesai:['Yeay, soal ini selesai!','Kerja bagus! Kamu hebat!','Keren! Satu soal tuntas!']
+};
+var plusTb=null,plusTa=null;
+function plusReduced(){return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);}
+function plusPick(a){return a[Math.floor(Math.random()*a.length)];}
+/* pesan pengarah (hanya Latihan Mandiri): sejalan dengan petunjuk yang sudah ada, tanpa membocorkan jawaban */
+/* pesan pengarah: disediakan oleh tab yang aktif (PL.Plus.panduan) */
+function plusGuide(){return PL.Plus.panduan?PL.Plus.panduan():plusPick(PLUS.salah);}
+function plusSay(text){
+  var b=$('#plusBubble');if(!b)return;
+  b.textContent=text;b.classList.add('show');
+  clearTimeout(plusTb);plusTb=setTimeout(function(){b.classList.remove('show');},4800);
+}
+function plusState(mood,act,ms){
+  var w=$('#plusWrap');if(!w)return;
+  w.removeAttribute('data-act');void w.offsetWidth;
+  w.setAttribute('data-mood',mood);
+  if(act)w.setAttribute('data-act',act);
+  clearTimeout(plusTa);
+  plusTa=setTimeout(function(){w.removeAttribute('data-act');w.setAttribute('data-mood','normal');},ms);
+}
+function plusConfetti(){
+  if(plusReduced())return;
+  var box=$('#plusConf');if(!box)return;
+  var cols=['#f59e0b','#15803d','#c2410c','#7e22ce','#1d4ed8','#ec4899'];
+  for(var i=0;i<16;i++){
+    var p=document.createElement('i'),a=-Math.PI*(0.12+0.76*Math.random()),r=50+Math.random()*45;
+    p.style.setProperty('--dx',Math.round(Math.cos(a)*r)+'px');
+    p.style.setProperty('--dy',Math.round(Math.sin(a)*r)+'px');
+    p.style.setProperty('--rot',Math.round(Math.random()*540-270)+'deg');
+    p.style.background=cols[i%cols.length];
+    p.style.animationDelay=(Math.random()*.15)+'s';
+    box.appendChild(p);
+    (function(el){setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},1800);})(p);
+  }
+}
+/* jenis: 'sapa' | 'benar' | 'salah' | 'petunjuk' | 'selesai' | 'skor' (extra = persen) */
+function mascotSay(kind,extra){
+  if(!$('#plusWrap')||document.body.classList.contains('plus-off'))return;
+  var learn=modeNow()==='latihan',msg,mood='normal',act='',ms=1500;
+  if(kind==='benar'){msg=plusPick(PLUS.benar);mood='happy';act='cheer';ms=1500;}
+  else if(kind==='salah'){msg=(learn&&Math.random()<.6)?plusGuide():plusPick(PLUS.salah);mood='sad';act='shake';ms=1200;}
+  else if(kind==='petunjuk'){msg=plusPick(PLUS.petunjuk);act='point';ms=1900;}
+  else if(kind==='selesai'){msg=plusPick(PLUS.selesai);mood='happy';act='spin';ms=1700;plusConfetti();}
+  else if(kind==='skor'){
+    if(extra>=70){msg='Luar biasa! Skor kamu tinggi!';mood='happy';act='spin';ms=1700;plusConfetti();}
+    else{msg='Tidak apa-apa, ayo coba lagi!';act='wave';ms=2300;}
+  }else{msg=plusPick(modeNow()!=='kuis'?PLUS.sapaL:PLUS.sapaP);act='wave';ms=2300;}
+  plusSay(msg);plusState(mood,act,ms);
+}
+function setPlusOff(off,save){
+  var t=$('#plusToggle');
+  document.body.classList.toggle('plus-off',off);
+  t.textContent=off?'👋 Plus':'✕';
+  t.title=off?'Munculkan Plus':'Sembunyikan Plus';
+  t.setAttribute('aria-label',off?'Munculkan Plus':'Sembunyikan Plus');
+  if(off){var b=$('#plusBubble');if(b)b.classList.remove('show');}
+  if(save){try{localStorage.setItem('plusOff',off?'1':'0');}catch(_){}}
+}
+$('#plusToggle').onclick=function(){
+  var off=!document.body.classList.contains('plus-off');
+  setPlusOff(off,true);
+  if(!off)mascotSay('sapa');
+};
+try{setPlusOff(localStorage.getItem('plusOff')==='1',false);}catch(_){}
+
+
+/* ---------- Plus berpindah dan menunjuk ---------- */
+var plusAt=null,plusTf=null,plusTh=null;
+function fxEnsure(){
+  var f=$('#plusFx');if(f)return f;
+  f=document.createElementNS('http://www.w3.org/2000/svg','svg');f.id='plusFx';f.setAttribute('aria-hidden','true');
+  f.innerHTML='<defs><marker id="fxArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f59e0b"/></marker></defs>'
+    +'<rect class="ring" id="fxRing" x="0" y="0" width="0" height="0"/><path class="beam" id="fxBeam" d=""/>';
+  document.body.appendChild(f);return f;
+}
+function exBarH(){return parseFloat(document.documentElement.style.getPropertyValue('--exbar-h'))||0;}
+/* gulir otomatis: hanya sebagai respons atas aksi navigasi (plusGo), seminimal mungkin, dan di atas bar */
+var plusTouch=false;
+['touchstart'].forEach(function(n){document.addEventListener(n,function(){plusTouch=true;},{passive:true});});
+['touchend','touchcancel'].forEach(function(n){document.addEventListener(n,function(){plusTouch=false;},{passive:true});});
+function plusReveal(b){
+  if(plusTouch)return;
+  var m=12,vh=window.innerHeight-exBarH(),dy;
+  if(b.top>=m&&b.bottom<=vh-m)return;
+  dy=(b.height>vh-2*m||b.top<m)?b.top-m:b.bottom-(vh-m);
+  if(dy)window.scrollBy(0,dy);
+}
+/* mengubah target (titik bidang, garis, DP, atau elemen) menjadi kotak pada layar */
+function plusRect(t,reveal){
+  if(!t)return null;
+  var rad=16,e;
+  if(t.pt){
+    var bd=PL.Plus.bidang;if(!bd)return null;
+    rad=t.r||16;
+    var scr=function(){var s2=bd.layar(t.pt[0],t.pt[1]);return s2?{x:s2.x-rad,y:s2.y-rad,w:rad*2,h:rad*2,round:true}:null;};
+    var rr=scr();if(rr&&reveal){plusReveal({top:rr.y,bottom:rr.y+rr.h,height:rr.h});rr=scr();}
+    return rr;
+  }
+  if(t.el){
+    e=typeof t.el==='string'?document.querySelector(t.el):t.el;if(!e)return null;
+    var r0=e.getBoundingClientRect();
+    if(!r0.width&&!r0.height)return null;
+    if(reveal){plusReveal({top:r0.top,bottom:r0.bottom,height:r0.height});r0=e.getBoundingClientRect();}
+    return {x:r0.left-4,y:r0.top-3,w:r0.width+8,h:r0.height+6,round:false};
+  }
+  return null;
+}
+function plusFxClear(){
+  var rg=$('#fxRing'),bm=$('#fxBeam');
+  if(rg){rg.setAttribute('width',0);rg.setAttribute('height',0);}
+  if(bm)bm.setAttribute('d','');
+}
+function plusPlace(reveal){
+  var a=plusAt;if(!a)return;
+  fxEnsure();
+  var r=plusRect(a.t,reveal);
+  if(!r){plusFxClear();return;}
+  var rg=$('#fxRing'),bm=$('#fxBeam');
+  rg.setAttribute('x',r.x);rg.setAttribute('y',r.y);rg.setAttribute('width',r.w);rg.setAttribute('height',r.h);rg.setAttribute('rx',r.round?r.w/2:10);
+  bm.setAttribute('d','');
+  var w=$('#plusWrap');
+  if(!w||document.body.classList.contains('plus-off'))return;
+  var vw=document.documentElement.clientWidth,vh=window.innerHeight-exBarH();
+  var bw=$('#plusBody').offsetWidth,bh=$('#plusBody').offsetHeight,ww=w.offsetWidth,wh=w.offsetHeight;
+  var hx=vw-8-ww,hy=vh-8-wh,m=16,tcx=r.x+r.w/2,tcy=r.y+r.h/2;
+  var yMid=tcy-(wh-bh/2);
+  var right={side:'r',X:r.x+r.w+m,Y:yMid},left={side:'l',X:r.x-m-ww,Y:yMid};
+  var vc=function(side,Y){var X=side==='r'?tcx-bw/2:tcx-(ww-bw/2);X=Math.min(Math.max(4,X),vw-4-ww);return {side:side,X:X,Y:Y,cx:X+(side==='r'?bw/2:ww-bw/2)};};
+  var vb=[vc('r',r.y+r.h+m),vc('l',r.y+r.h+m)],va=[vc('r',r.y-m-wh),vc('l',r.y-m-wh)];
+  var byC=function(p,q){return Math.abs(p.cx-tcx)-Math.abs(q.cx-tcx);};vb.sort(byC);va.sort(byC);
+  var cs=(tcx>vw/2?[left,right]:[right,left]).concat(tcy>vh/2?va.concat(vb):vb.concat(va));
+  var fits=function(c){return c.X>=4&&c.Y>=4&&c.X+ww<=vw-4&&c.Y+wh<=vh-4;};
+  var ex0=r.x-4,ey0=r.y-4,ew=r.w+8,eh=r.h+8;
+  var clash=function(c){return !(c.X+ww<=ex0||c.X>=ex0+ew||c.Y+wh<=ey0||c.Y>=ey0+eh);};
+  var pk=null,i;
+  for(i=0;i<cs.length;i++)if(fits(cs[i])&&!clash(cs[i])){pk=cs[i];break;}
+  if(!pk)for(i=0;i<cs.length;i++)if(fits(cs[i])){pk=cs[i];break;}
+  if(!pk){pk={side:cs[0].side,X:Math.min(Math.max(4,cs[0].X),vw-4-ww),Y:Math.min(Math.max(4,cs[0].Y),vh-4-wh)};}
+  w.setAttribute('data-side',pk.side);w.classList.add('go');
+  w.style.transform='translate('+Math.round(pk.X-hx)+'px,'+Math.round(pk.Y-hy)+'px)';
+  var S={x:pk.X+(pk.side==='r'?bw/2:ww-bw/2),y:pk.Y+wh-bh/2},C={x:tcx,y:tcy};
+  clearTimeout(plusTf);
+  plusTf=setTimeout(function(){
+    if(!plusAt)return;
+    var dx=C.x-S.x,dy=C.y-S.y,L=Math.sqrt(dx*dx+dy*dy)||1,ux=dx/L,uy=dy/L;
+    var t1=Math.min((r.w/2+6)/(Math.abs(ux)||1e-6),(r.h/2+6)/(Math.abs(uy)||1e-6));
+    var s0=bw*.42;if(L<=s0+t1+8){bm.setAttribute('d','');return;}
+    bm.setAttribute('d','M'+(S.x+ux*s0)+' '+(S.y+uy*s0)+' L'+(C.x-ux*t1)+' '+(C.y-uy*t1));
+  },plusReduced()?0:680);
+}
+function plusGo(t,text,auto){
+  plusAt={t:t};clearTimeout(plusTh);
+  if(text){var b=$('#plusBubble');if(b){b.textContent=text;b.classList.add('show');clearTimeout(plusTb);}}
+  plusPlace(true);
+  if(!document.body.classList.contains('plus-off'))plusState('normal','point',1900);
+  if(auto)plusTh=setTimeout(plusHome,auto);
+}
+function plusHome(){
+  plusAt=null;clearTimeout(plusTf);clearTimeout(plusTh);
+  var w=$('#plusWrap');if(w){w.style.transform='';w.removeAttribute('data-side');}
+  plusFxClear();
+  var b=$('#plusBubble');if(b)b.classList.remove('show');
+}
+var plusRaf=0;
+function plusRefresh(){if(!plusAt||plusRaf)return;plusRaf=requestAnimationFrame(function(){plusRaf=0;plusPlace();});}
+var MQ_SMALL=window.matchMedia?window.matchMedia('not all and (min-width:860px) and (min-height:500px)'):null;
+function barSync(){if(PL.barSync)PL.barSync();}
+window.addEventListener('resize',barSync);
+window.addEventListener('resize',plusRefresh);
+if(MQ_SMALL&&MQ_SMALL.addEventListener)MQ_SMALL.addEventListener('change',function(){barSync();plusRefresh();});
+window.addEventListener('scroll',plusRefresh,{passive:true});
+document.addEventListener('scroll',plusRefresh,{passive:true,capture:true});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')plusHome();});
+
+var MATH_FB=(typeof WeakMap==='function')?new WeakMap():null;
+var MATH_OPT={throwOnError:false,displayMode:false,output:'htmlAndMathml',strict:'ignore',trust:false};
+var MATH_CSS_OK=false;
+function mathCss(){
+  var l=document.getElementById('katexCss'),okc=MATH_CSS_OK;
+  if(!l||!l.sheet)return false;
+  try{okc=l.sheet.cssRules.length>0;}catch(e){}
+  if(!okc)return false;
+  if(l.media!=='all')l.media='all';
+  return true;
+}
+function mathReady(){return !!(MATH_FB&&window.katex&&typeof window.katex.render==='function'&&mathCss());}
+function renderMath(root){
+  if(!root||!mathReady())return 0;
+  var list=[].slice.call(root.querySelectorAll?root.querySelectorAll('[data-tex]'):[]);
+  if(root.nodeType===1&&root.hasAttribute('data-tex'))list.unshift(root);
+  var c=0;
+  list.forEach(function(el){
+    if(el.querySelector('.katex'))return;
+    var tex=el.getAttribute('data-tex'),tmp;
+    try{
+      tmp=document.createElement('span');
+      window.katex.render(tex,tmp,MATH_OPT);
+      if(!tmp.querySelector('.katex')||tmp.querySelector('.katex-error'))return;
+    }catch(e){return;}
+    MATH_FB.set(el,el.innerHTML);
+    el.innerHTML='';
+    while(tmp.firstChild)el.appendChild(tmp.firstChild);
+    c++;
+  });
+  if(c){plusRefresh();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(plusRefresh);}
+  return c;
+}
+function mathBoot(){if(mathReady())renderMath(document);}
+['katexJs','katexCss'].forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('load',function(){if(id==='katexCss')MATH_CSS_OK=true;mathBoot();});});
+window.addEventListener('load',mathBoot);
+if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',plusRefresh);
+
+PL.Plus={panduan:null,bidang:null,say:mascotSay,ucap:plusSay,go:plusGo,home:plusHome,refresh:plusRefresh,aktif:function(){return !!plusAt;}};
+PL.Math={render:renderMath};
+
+/* ---------- PL.Langkah: penampil langkah soal ----------
+   var L=PL.Langkah(sectionEl,{petunjuk:bool, diManaSalah:bool, periksa:fn(a,r), aksi:fn(nama,tombol), meta:fn(),
+                               pratinjau:bool, ubahPetunjuk:fn(teks), petunjukLanjut:fn(Q,s,St), gerbangPetunjuk:n})
+   pratinjau    : tampilkan "Persamaanmu" (rumus KaTeX) di samping isian a, b, c
+   ubahPetunjuk : mengubah teks petunjuk sebelum ditampilkan (CORE tidak ikut berubah)
+   Bentuk langkah dari CORE: form (isian pg, num, eq; lay 'koor' = pasangan koordinat), pt (ketuk satu titik),
+   pts (ketuk beberapa titik; ketuk lagi untuk membatalkan).
+   Wadah di dalam section: .meta .ask (kartu soal), .prog .steptext (progres), .panel, svg.bidang, .cap
+   Semua tombol memakai data-aksi; satu pendengar klik per panel (event delegation). */
+/* bilangan untuk isian: bulat → "3"; desimal pendek → "2,5"; pecahan berulang → "−1/3" */
+function teksIsian(v){
+  if(Math.floor(v)===v)return String(v).replace('-','−');
+  for(var d=2;d<=12;d++){var n=v*d;if(Math.abs(n-Math.round(n))<1e-9){var dec=String(Math.round(v*1000)/1000);
+    if(Math.abs(+dec-v)<1e-9)return dec.replace('.',',').replace('-','−');return (n<0?'−':'')+Math.abs(Math.round(n))+'/'+d;}}
+  return String(Math.round(v*1000)/1000).replace('.',',').replace('-','−');
+}
+U.teksIsian=teksIsian;
+PL.Langkah=function(sec,opsi){
+  var q=function(s){return sec.querySelector(s);};
+  var el={meta:q('.meta'),ask:q('.ask'),prog:q('.prog'),stepText:q('.steptext'),panel:q('.panel'),svg:q('svg.bidang'),cap:q('.cap')};
+  var bidang=PL.Bidang(el.svg,el.cap);
+  var S={Q:null,s:0,ans:[],lock:[],pt:null,sel:[],tries:0,solved:false,hints:0,lw:null,tahap:'kerja',selesai:false};
+  var pq=function(s){return el.panel.querySelector(s);};
+  function curS(){return S.Q&&S.Q.st[S.s];}
+  function reset(){
+    var St=curS();S.ans=[];S.lock=[];S.pt=null;S.sel=[];S.tries=0;S.solved=false;S.hints=0;S.lw=null;
+    if(St&&St.k==='form')St.it.forEach(function(it){S.ans.push(it.t==='eq'?['','','']:it.t==='num'?'':null);S.lock.push(false);});
+  }
+  function muat(Q,s){S.Q=Q;S.s=s||0;reset();}
+
+  /* ---- membaca jawaban ---- */
+  function parseNum(s,isRp){
+    s=String(s==null?'':s).trim().replace(/[−–]/g,'-').replace(/\s/g,'');
+    if(isRp)s=s.replace(/^rp/i,'');
+    if(isRp||/^-?\d{1,3}(\.\d{3})+$/.test(s))s=s.replace(/\./g,'');
+    s=s.replace(/,/g,'.');
+    var m=/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/.exec(s);   /* pecahan, mis. -1/3 */
+    if(m){var d=+m[2];return d===0?NaN:(+m[1])/d;}
+    if(!/^-?\d+(\.\d+)?$/.test(s))return NaN;
+    return +s;
+  }
+  function collect(){
+    var St=curS();
+    if(St.k==='pt')return S.pt?{x:S.pt.x,y:S.pt.y}:null;
+    if(St.k==='pts')return S.sel.length?S.sel.map(function(p){return {x:p.x,y:p.y};}):null;
+    var out=[],bad=false;
+    St.it.forEach(function(it,i){
+      var a=S.ans[i];
+      if(it.t==='pg'){if(a===null)bad=true;out.push(a);}
+      else if(it.t==='num'){var v=parseNum(a,it.u==='rp');if(isNaN(v))bad=true;out.push(v);}
+      else{var arr=a.slice(0,3).map(function(x){return parseNum(x,false);});if(arr.some(isNaN))bad=true;out.push(arr);}
+    });
+    return bad?null:out;
+  }
+
+  /* ---- tampilan langkah ---- */
+  function optKind(o){var m=Math.max.apply(null,o.map(function(x){return x.length;}));return m<=3?'op':m<=40?'seg':'sol';}
+  function inpNum(i,aria,extra){
+    var lk=S.lock[i],dis=lk||S.solved?' disabled':'',it=curS().it[i];
+    return '<input class="num vin'+(lk?' ok':'')+(extra||'')+'" data-i="'+i+'" inputmode="text" autocomplete="off" spellcheck="false" value="'+esc(S.ans[i])+'"'+dis+' aria-label="'+esc(aria||it.lab)+'">';
+  }
+  function itemHTML(it,i,St){
+    var lk=S.lock[i],dis=lk||S.solved?' disabled':'',a=S.ans[i];
+    if(it.t==='pg'){
+      var kind=optKind(it.o),b='';
+      it.o.forEach(function(o,j){
+        var on=a===j;
+        if(kind==='op')b+='<button class="btn relb opb'+(on?' sel':'')+'" data-i="'+i+'" data-j="'+j+'"'+dis+'>'+esc(o)+'</button> ';
+        else if(kind==='seg')b+='<button class="segb'+(on?' on':'')+'" data-i="'+i+'" data-j="'+j+'"'+dis+'>'+esc(o)+'</button>';
+        else b+='<button class="sol'+(on?' on':'')+'" data-i="'+i+'" data-j="'+j+'"'+dis+'>'+esc(o)+'</button>';
+      });
+      return '<div class="trow'+(lk?' ok':'')+'" data-i="'+i+'"><p>'+esc(it.lab)+'</p><div class="'+(kind==='sol'?'sols':'seg')+'">'+b+'</div></div>';
+    }
+    if(it.t==='num'){
+      return '<div class="trow'+(lk?' ok':'')+'" data-i="'+i+'"><label class="nrow"><span>'+esc(it.lab)+'</span> <span class="nin">'+(it.u==='rp'?'Rp ':'')+inpNum(i)+(it.u&&it.u!=='rp'?' <span class="sat">'+esc(it.u)+'</span>':'')+'</span></label></div>';
+    }
+    var inp=function(j,ph){return '<input class="num" data-i="'+i+'" data-j="'+j+'" inputmode="text" autocomplete="off" value="'+esc(a[j])+'" placeholder="'+ph+'"'+dis+' aria-label="'+ph+'">';};
+    var baris='<div class="eqin">'+inp(0,'a')+'<i>x</i> + '+inp(1,'b')+'<i>y</i> <b>=</b> '+inp(2,'c')+'</div>';
+    if(opsi.pratinjau)baris='<div class="eqwrap">'+baris+'<div class="pratinjau" data-pr="'+i+'"><small>Persamaanmu</small><span class="pr-isi"></span></div></div>';
+    return '<div class="trow'+(lk?' ok':'')+'" data-i="'+i+'"><p>'+esc(it.lab)+'</p>'+baris+'</div>';
+  }
+  /* pasangan koordinat: label ( x , y ) */
+  function koorHTML(St){
+    var h='';
+    for(var i=0;i+1<St.it.length;i+=2){
+      var ok=S.lock[i]&&S.lock[i+1];
+      h+='<div class="trow koor'+(ok?' ok':'')+'" data-i="'+i+'" data-k="'+i+'"><span class="klab">'+esc(St.it[i].lab)+'</span>'
+        +'<span class="kin"><span class="kur">(</span>'+inpNum(i,St.it[i].lab+', nilai x')+'<span class="kom">,</span>'+inpNum(i+1,St.it[i].lab+', nilai y')+'<span class="kur">)</span></span></div>';
+    }
+    return h;
+  }
+  function selText(){return S.sel.length?'Titik yang dipilih: <b>'+S.sel.map(ptS).join(', ')+'</b>':'<span class="muted">Belum ada titik yang dipilih.</span>';}
+  /* ---- pratinjau "Persamaanmu": isian a, b, c ditampilkan sebagai rumus (aktif bila opsi.pratinjau) ---- */
+  function bentukPratinjau(a){
+    var bag=[0,1,2].map(function(j){var s=String(a[j]==null?'':a[j]).trim();if(s==='')return {k:'kosong'};var v=parseNum(s,false);return isNaN(v)?{k:'salah'}:{k:'ok',v:v};});
+    var angT=function(v){return teksIsian(Math.abs(v)).replace(',','{,}');},angP=function(v){return teksIsian(Math.abs(v));};
+    var KOSONG_T='\\square',SALAH_T='{\\color{#b91c1c}?}';
+    var tex='',teks='',ada=false;
+    function suku(p,vr){
+      if(p.k==='ok'&&p.v===0)return;
+      var neg=p.k==='ok'&&p.v<0,satu=p.k==='ok'&&Math.abs(p.v)===1;
+      var kT=p.k==='kosong'?KOSONG_T+' ':p.k==='salah'?SALAH_T:satu?'':angT(p.v);
+      var kP=p.k==='kosong'?'□':p.k==='salah'?'?':satu?'':angP(p.v);
+      if(!ada){tex+=(neg?'-':'')+kT+vr;teks+=(neg?'−':'')+kP+vr;}
+      else{tex+=(neg?' - ':' + ')+kT+vr;teks+=(neg?' − ':' + ')+kP+vr;}
+      ada=true;
+    }
+    suku(bag[0],'x');suku(bag[1],'y');
+    if(!ada){tex='0';teks='0';}
+    var c=bag[2];
+    var cT=c.k==='kosong'?KOSONG_T:c.k==='salah'?SALAH_T:(c.v<0?'-':'')+angT(c.v);
+    var cP=c.k==='kosong'?'□':c.k==='salah'?'?':(c.v<0?'−':'')+angP(c.v);
+    return {tex:tex+' = '+cT,teks:teks+' = '+cP};
+  }
+  function pratinjau(i){
+    if(!opsi.pratinjau)return;
+    var St=curS(),it=St&&St.it&&St.it[i],box=pq('.pratinjau[data-pr="'+i+'"] .pr-isi');
+    if(!box||!it||it.t!=='eq')return;
+    var b=bentukPratinjau(S.ans[i]);
+    box.textContent=b.teks;
+    box.setAttribute('data-tex',b.tex);
+    PL.Math.render(box);
+  }
+  function pratinjauSemua(){var St=curS();if(!opsi.pratinjau||!St||St.k!=='form')return;St.it.forEach(function(it,i){pratinjau(i);});}
+  function panelLangkah(){
+    var St=curS(),h='';
+    h+='<h2>Langkah '+(S.s+1)+' · '+esc(St.nm)+'</h2><p>'+St.q+'</p>';
+    if(St.k==='form'){
+      if(St.lay==='koor')h+=koorHTML(St);
+      else h+=St.it.map(function(it,i){return itemHTML(it,i,St);}).join('');
+      if(St.it.some(function(it){return it.t==='eq';}))h+='<p class="muted">Tulis koefisien negatif dengan tanda minus, misalnya −3. Bentuk yang dikalikan atau disederhanakan juga diterima.</p>';
+      else if(St.it.some(function(it){return it.t==='num';}))h+='<p class="muted">Bilangan negatif ditulis dengan tanda minus, misalnya −4. Pecahan boleh ditulis 1/3 atau 0,5.</p>';
+    }else if(St.k==='pt')h+='<p class="state ptstate">Titik pilihanmu '+(S.pt?'<b>'+ptS(S.pt)+'</b>':'<span class="muted">belum ada</span>')+'</p><p class="muted">Ketuk satu titik kisi pada bidang koordinat.</p>';
+    else h+='<p class="state selstate">'+selText()+'</p><p class="muted">Ketuk titik kisi pada bidang untuk memilih. Ketuk lagi titik yang sama untuk membatalkan.</p>';
+    h+='<ul class="hints" hidden></ul><div class="fb" hidden></div><div class="actions row">'+(opsi.petunjuk?'<button class="btn ghost" data-aksi="petunjuk">💡 Petunjuk</button>':'')+'<button class="btn primary" data-aksi="periksa">Periksa</button></div>';
+    el.panel.innerHTML=h;
+    renderHints();
+    pratinjauSemua();
+  }
+
+  /* ---- satu pendengar untuk seluruh panel ---- */
+  el.panel.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b||b.disabled||!el.panel.contains(b))return;
+    if(b.dataset.j!==undefined&&b.dataset.i!==undefined){
+      var i=+b.dataset.i;if(S.lock[i]||S.solved)return;S.ans[i]=+b.dataset.j;
+      var row=b.closest('.trow');row.classList.remove('bad');
+      row.querySelectorAll('[data-j]').forEach(function(x){var o=+x.dataset.j===S.ans[i];x.classList.toggle('on',o);x.classList.toggle('sel',o);});
+      return;
+    }
+    var a=b.dataset.aksi;if(!a)return;
+    if(a==='periksa')periksa();
+    else if(a==='petunjuk')tambahPetunjuk(true);
+    else if(a==='dimana')diMana();
+    else if(opsi.aksi)opsi.aksi(a,b);
+  });
+  el.panel.addEventListener('input',function(e){
+    var inp=e.target;
+    if(!inp.classList.contains('num')||inp.dataset.i===undefined)return;
+    var i=+inp.dataset.i;
+    if(inp.dataset.j!==undefined){S.ans[i][+inp.dataset.j]=inp.value;pratinjau(i);}else S.ans[i]=inp.value;
+    var r=inp.closest('.trow');if(r)r.classList.remove('bad');inp.classList.remove('bad');
+  });
+  el.panel.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.classList.contains('num'))periksa();});
+  el.svg.addEventListener('click',function(e){
+    if(!S.Q||S.tahap!=='kerja'||S.solved||S.selesai)return;
+    if(opsi.bolehKlik&&!opsi.bolehKlik())return;
+    var St=curS(),c=bidang.klik(e);
+    if(St.k==='pt'){S.pt=bidang.tempel(c);var ps=pq('.ptstate');if(ps)ps.innerHTML='Titik pilihanmu <b>'+ptS(S.pt)+'</b>';var f=pq('.fb');if(f&&f.classList.contains('info'))f.hidden=true;renderBidang();}
+    else if(St.k==='pts'){
+      var p=bidang.tempel(c),ix=-1;
+      S.sel.forEach(function(r,i){if(r.x===p.x&&r.y===p.y)ix=i;});
+      if(ix>=0)S.sel.splice(ix,1);else if(S.sel.length<16)S.sel.push(p);
+      var ss=pq('.selstate');if(ss)ss.innerHTML=selText();renderBidang();
+    }
+  });
+
+  /* ---- umpan balik ---- */
+  function fb(kind,html){var e=pq('.fb');if(!e)return;e.hidden=false;e.className='fb '+kind;e.innerHTML=html;}
+  /* ---- petunjuk bertahap ----
+     opsi.petunjukLanjut(Q,s,St) : petunjuk tambahan yang tampil setelah petunjuk CORE
+     opsi.gerbangPetunjuk = n     : petunjuk ke-(n+1) dan seterusnya baru terbuka setelah
+                                    siswa mencoba menjawab minimal sekali pada langkah itu */
+  function daftarPetunjuk(){
+    var St=curS();if(!St)return [];
+    var x=[];
+    if(opsi.petunjukLanjut){try{x=opsi.petunjukLanjut(S.Q,S.s,St)||[];}catch(err){if(window.console)console.warn('petunjukLanjut',err);x=[];}}
+    return St.h.concat(x);
+  }
+  function gerbangTertutup(){var g=opsi.gerbangPetunjuk;return g!=null&&S.hints>=g&&S.tries<1;}
+  function tambahPetunjuk(sapa){var l=daftarPetunjuk();if(!l.length||S.hints>=l.length||gerbangTertutup())return;S.hints++;renderHints();if(sapa)PL.Plus.say('petunjuk');}
+  function bukaSemuaPetunjuk(){if(!opsi.petunjuk)return;S.hints=daftarPetunjuk().length;renderHints();}
+  function renderHints(){
+    var box=pq('.hints');if(!box)return;
+    var St=curS(),l=daftarPetunjuk(),n0=St?St.h.length:0;
+    box.innerHTML=l.slice(0,S.hints).map(function(h,i){
+      var isi=opsi.ubahPetunjuk?opsi.ubahPetunjuk(h):h,kls=i>=n0?' rinci':'';
+      return '<li class="baru'+kls+'">'+isi+'</li>';
+    }).join('');
+    box.hidden=!S.hints||!opsi.petunjuk;
+    var tb=pq('[data-aksi="petunjuk"]');
+    if(tb){
+      var habis=S.hints>=l.length,tutup=!habis&&gerbangTertutup();
+      tb.hidden=!l.length;tb.disabled=habis||tutup;
+      tb.textContent=habis?'💡 Semua petunjuk sudah dibuka'
+        :tutup?'💡 Coba jawab dulu untuk membuka petunjuk berikutnya'
+        :!S.hints?'💡 Petunjuk':'💡 Petunjuk lebih rinci ('+(S.hints+1)+' dari '+l.length+')';
+    }
+  }
+  function tandai(r){
+    var St=curS();if(St.k!=='form')return;
+    r.items.forEach(function(ok,i){
+      if(ok)S.lock[i]=true;
+      var inps=el.panel.querySelectorAll('[data-i="'+i+'"]');
+      inps.forEach(function(x){
+        if(x.tagName==='INPUT'){x.classList.toggle('ok',ok);x.classList.toggle('bad',!ok);if(ok)x.disabled=true;}
+        else if(x.classList.contains('trow')&&St.lay!=='koor'){x.classList.toggle('ok',ok);x.classList.toggle('bad',!ok);if(ok)x.querySelectorAll('button,input').forEach(function(y){y.disabled=true;});}
+      });
+    });
+    if(St.lay==='koor')el.panel.querySelectorAll('.trow.koor').forEach(function(row){
+      var i=+row.dataset.k,ok=r.items[i]&&r.items[i+1];row.classList.toggle('ok',ok);row.classList.toggle('bad',!ok);
+    });
+  }
+  function kunciSemua(){el.panel.querySelectorAll('.trow button, .trow input').forEach(function(x){x.disabled=true;});var b=pq('[data-aksi="periksa"]');if(b)b.disabled=true;}
+  function isiKunci(){
+    var St=curS(),k=CORE.keyAns(S.Q,S.s);
+    if(St.k==='pt')S.pt=k;
+    else if(St.k==='pts')S.sel=k;
+    else St.it.forEach(function(it,i){S.ans[i]=it.t==='pg'?k[i]:it.t==='num'?(it.u==='rp'?nm(k[i]):teksIsian(k[i])):k[i].map(teksIsian);S.lock[i]=true;});
+  }
+  function teksKunci(){
+    var St=curS(),k=CORE.keyAns(S.Q,S.s);
+    if(St.k==='pt')return ptS(k);
+    if(St.k==='pts')return k.map(ptS).join(', ');
+    if(St.lay==='koor'){var o=[];for(var i=0;i+1<St.it.length;i+=2)o.push(esc(St.it[i].lab)+' = '+ptS({x:k[i],y:k[i+1]}));return o.join(' ; ');}
+    return St.it.map(function(it,i){var a=k[i];
+      if(it.t==='pg')return esc(it.o[a]);
+      if(it.t==='num')return esc(it.lab)+' '+(it.u==='rp'?U.rp(a):nm(a))+(it.u&&it.u!=='rp'?' '+esc(it.u):'');
+      return U.eqS(Lq(a[0],a[1],a[2],'='));}).join(' ; ');
+  }
+  function tombol(html){var a=pq('.actions');if(a){a.innerHTML=html;var b=a.querySelector('.btn.primary');if(b&&b.focus)b.focus({preventScroll:true});}}
+  function tambahTombol(html){var a=pq('.actions');if(a)a.insertAdjacentHTML('beforeend',html);}
+  function periksa(){
+    if(S.solved)return;
+    var a=collect(),St=curS();
+    if(a===null||!CORE.valid(S.Q,S.s,a)){fb('info',St.k==='pt'?'Ketuk satu titik pada bidang dulu.':St.k==='pts'?'Pilih titik pada bidang dulu.':'Lengkapi semua isian dulu. Pastikan isinya bilangan, misalnya −3, 2,5, atau 1/3.');return;}
+    opsi.periksa(a,CORE.judge(S.Q,S.s,a));
+  }
+
+  /* ---- "Di mana salahku?" ----
+     Menunjukkan bagian yang salah dan jenis kesalahannya tanpa memberi jawaban. */
+  function tombolDiMana(){
+    if(!opsi.diManaSalah||!S.lw)return;
+    var e=pq('.fb');if(!e||e.hidden)return;
+    e.insertAdjacentHTML('beforeend','<div class="whereBox"><button class="btn ghost" data-aksi="dimana" type="button">📍 Di mana salahku?</button> <span class="whereTxt" role="status"></span></div>');
+  }
+  /* membandingkan pasangan (x, y) jawaban dengan kunci: jenis kesalahan yang umum */
+  function polaKoor(p,k){
+    if(p.x===k.x&&p.y===k.y)return '';
+    if(p.x===k.y&&p.y===k.x)return 'Nilai x dan y tertukar posisinya.';
+    if(p.x===-k.x&&p.y===-k.y)return 'Tanda kedua koordinat terbalik.';
+    if(p.x===k.x)return 'Nilai x sudah tepat. Periksa nilai y'+(p.y===-k.y?', tandanya terbalik.':'.');
+    if(p.y===k.y)return 'Nilai y sudah tepat. Periksa nilai x'+(p.x===-k.x?', tandanya terbalik.':'.');
+    if(Math.abs(p.x)===Math.abs(k.y)&&Math.abs(p.y)===Math.abs(k.x))return 'Posisi x dan y sudah ditukar dengan benar. Periksa tandanya.';
+    return 'Kedua koordinat belum tepat. Tulis aturannya dulu, lalu substitusikan satu per satu.';
+  }
+  function diMana(){
+    var w=S.lw;if(!w)return;
+    var St=curS(),t=null,msg='';
+    if(St.k==='form'){
+      var i=w.r.items.indexOf(false),it=St.it[i],a=w.a[i];
+      t={el:el.panel.querySelector('[data-i="'+(St.lay==='koor'?i-(i%2):i)+'"]')};
+      if(St.lay==='koor'){
+        var j=i-(i%2),pa={x:w.a[j],y:w.a[j+1]},pk={x:St.it[j].key,y:St.it[j+1].key};
+        msg=esc(St.it[j].lab)+': '+polaKoor(pa,pk);
+      }else if(it.t==='eq'){
+        var k=it.key,sb=Math.abs(a[0]*k.b-a[1]*k.a)<1e-9;
+        msg=sb?'Koefisien x dan y sudah sebanding dengan jawaban, tetapi ruas kanan (c) belum tepat.':'Koefisien x dan y belum tepat. Periksa tanda setelah substitusi.';
+      }else if(it.t==='num'){
+        if(a===-it.key)msg='Nilainya sudah benar, tetapi tandanya terbalik.';
+        else if(Math.abs(it.key)>0&&Math.abs(a*it.key-1)<1e-9)msg='Kamu membalik pembagiannya. Bagi bayangan dengan asal, bukan sebaliknya.';
+        else msg='Nilai pada isian ini belum tepat. Hitung ulang pelan-pelan.';
+      }
+      else msg='Pilihan pada baris ini belum tepat. Baca lagi soalnya.';
+    }else if(St.k==='pt'){
+      var p=w.a,kk=St.cond.p[0];t={pt:[p.x,p.y]};
+      msg='Titik '+ptS(p)+' bukan titik yang dimaksud. '+polaKoor(p,kk);
+    }else{
+      var n=St.key.length;
+      if(w.r.lebih.length){var ex=w.r.lebih[0];t={pt:[ex.x,ex.y]};msg='Titik '+ptS(ex)+' bukan titik yang dimaksud. Ketuk titik itu lagi untuk membatalkan.';}
+      else msg='Titik yang kamu pilih sudah benar, tetapi masih kurang. Seharusnya ada '+n+' titik.';
+    }
+    var wt=pq('.whereTxt');if(wt)wt.textContent=msg;
+    if(t)PL.Plus.go(t,msg,9000);
+  }
+
+  /* ---- kartu soal, progres, bidang ---- */
+  function renderKartu(){
+    if(!S.Q)return;
+    el.ask.innerHTML=S.Q.soal;
+    el.meta.innerHTML=opsi.meta?opsi.meta():esc(S.Q.jd+' · '+S.Q.lv);
+  }
+  function renderProgres(intro){
+    if(!S.Q)return;
+    var items=[{l:'Soal',d:!intro,c:!!intro}];
+    S.Q.st.forEach(function(St,i){var done=S.selesai||(!intro&&(i<S.s||(i===S.s&&S.solved)));items.push({l:St.nm,d:done,c:!intro&&!S.selesai&&i===S.s&&!S.solved});});
+    el.prog.innerHTML=items.map(function(it,i){return '<li class="'+(it.d?'done':it.c?'cur':'')+'"><span>'+(it.d?'✓':i+1)+'</span><em>'+esc(it.l)+'</em></li>';}).join('');
+    el.stepText.textContent=intro?'Baca soal, lalu mulai':S.selesai?'Selesai 🎉':'Langkah '+(S.s+1)+' dari '+S.Q.st.length+' · '+S.Q.st[S.s].nm;
+  }
+  function qView(spec,extra){
+    var V={};spec=spec||{};
+    for(var k in spec)V[k]=spec[k];
+    V.B=S.Q.pl;
+    if(extra)for(var k2 in extra)V[k2]=extra[k2];
+    return V;
+  }
+  function renderBidang(mode){
+    if(!S.Q)return kosong();
+    if(mode==='akhir'||S.selesai)return bidang.gambar(qView(S.Q.vz));
+    if(mode==='awal')return bidang.gambar(qView(S.Q.st[0].v));
+    var St=curS(),ex={};
+    /* setelah langkah selesai, tampilkan jawaban pada bidang */
+    if(St.k==='pt'){ex.pick=S.pt;ex.click=!S.solved;}
+    if(St.k==='pts'){ex.sel=S.sel;ex.click=!S.solved;}
+    bidang.gambar(qView(St.v,ex));
+  }
+  function kosong(cap){bidang.gambar({B:CORE.FULL,cap:cap||'Bidang koordinat akan menampilkan soal.'});}
+
+  return {S:S,el:el,bidang:bidang,curS:curS,muat:muat,reset:reset,collect:collect,parseNum:parseNum,
+    panelLangkah:panelLangkah,renderKartu:renderKartu,renderProgres:renderProgres,renderBidang:renderBidang,kosong:kosong,
+    fb:fb,tandai:tandai,kunciSemua:kunciSemua,isiKunci:isiKunci,teksKunci:teksKunci,tombol:tombol,tambahTombol:tambahTombol,
+    tambahPetunjuk:tambahPetunjuk,renderHints:renderHints,bukaSemuaPetunjuk:bukaSemuaPetunjuk,tombolDiMana:tombolDiMana,periksa:periksa,
+    panduan:function(){var St=curS();if(!St)return null;return St.k==='pt'?'Hitung koordinatnya dulu, ya':St.k==='pts'?'Periksa lagi titik-titik pilihanmu, ya':'Periksa isian yang berwarna merah, ya';}};
+};
+})(window.PL=window.PL||{});
+
+</script>
+<script>
+/* ==========================================================================
+   latihan.js · TAB LATIHAN MANDIRI
+   Wadah: <section id="tab-latihan">. Soal dibangkitkan acak oleh CORE,
+   dinilai langsung di halaman, tidak dikirim ke server.
+   Opsi khusus tab ini: petunjuk bertahap, "Di mana salahku?", percobaan tanpa batas,
+   tombol "Lihat jawaban" setelah dua kali salah.
+   Pemilih soal: bagian materi (A–E), level (LOTS/MOTS/HOTS), lalu tipe (1–24) atau acak.
+   ========================================================================== */
+(function(PL){
+'use strict';
+var U=PL.U,$=U.$,esc=U.esc;
+var sec,L,pick={b:'C',l:'C',t:'C'},tahap='intro';
+
+/* ---------- Petunjuk ----------
+   Teks petunjuk lanjutan khusus Latihan ada di js/petunjuk.js (PL.Petunjuk), bila dimuat.
+   Petunjuk ke-3 dan seterusnya baru terbuka setelah siswa mencoba menjawab minimal
+   sekali pada langkah itu (GERBANG_PETUNJUK). */
+var GERBANG_PETUNJUK=2;
+function petunjukLanjut(Q,s,St){return PL.Petunjuk?PL.Petunjuk.lanjut(Q,s,St):[];}
+function namaRumus(h){return PL.Petunjuk&&PL.Petunjuk.namaRumus?PL.Petunjuk.namaRumus(h):h;}
+
+/* ---------- pemilih soal ---------- */
+var BAGIAN_PILIH=[['ROT','A · Rotasi'],['DIL','B · Dilatasi'],['GRS','C · Persamaan garis'],['BONE','D · Konteks Bone'],['KOMP','E · Komposisi'],['C','Campuran']];
+var LEVEL_PILIH=[['L','LOTS'],['M','MOTS'],['H','HOTS'],['C','Campuran']];
+function semuaTipe(){var o=[];for(var t=1;t<=24;t++)o.push(t);return o;}
+function cocok(t){return (pick.b==='C'||CORE.BG_TIPE[t]===pick.b)&&(pick.l==='C'||CORE.levels(t).indexOf(pick.l)>=0);}
+function calonTipe(){return semuaTipe().filter(cocok);}
+function acakDari(a){return a[Math.floor(Math.random()*a.length)];}
+function soalBaru(){
+  var calon=pick.t==='C'?calonTipe():[pick.t];
+  if(!calon.length){pick.l='C';calon=calonTipe();}
+  var t=acakDari(calon),lv=CORE.levels(t).filter(function(l){return pick.l==='C'||l===pick.l;});
+  var l=acakDari(lv.length?lv:CORE.levels(t));
+  L.muat(CORE.gen(t,l,Math.random,true),0);L.S.selesai=false;tahap='intro';render();
+}
+function render(){
+  L.S.tahap=tahap==='kerja'?'kerja':'lain';
+  sec.dataset.tahap=tahap;
+  L.renderKartu();
+  if(tahap==='intro'){L.renderProgres(true);panelIntro();L.renderBidang('awal');}
+  else if(tahap==='selesai'){L.S.selesai=true;L.renderProgres();panelSelesai();L.renderBidang('akhir');}
+  else{L.renderProgres();L.panelLangkah();L.renderBidang();}
+  if(PL.kuis)PL.kuis.pendNotice(L.el.panel);
+}
+function chips(aksi,daftar,nilai,mati){
+  return '<div class="chips">'+daftar.map(function(o){var m=mati&&mati(o[0]);return '<button class="chip'+(String(nilai)===o[0]?' on':'')+'" data-aksi="'+aksi+'" data-v="'+o[0]+'"'+(m?' disabled title="Tidak ada soal untuk pilihan ini"':'')+'>'+esc(o[1])+'</button>';}).join('')+'</div>';
+}
+function panelIntro(){
+  var Q=L.S.Q,h='<h2>Pilih soal</h2><p class="muted">Pilih bagian dan level, lalu tipe soal. Setiap tekan 🎲 menghasilkan soal baru.</p>';
+  h+='<div class="lvl"><b>Bagian</b>'+chips('bagian',BAGIAN_PILIH,pick.b)+'</div>';
+  h+='<div class="lvl"><b>Level</b>'+chips('level',LEVEL_PILIH,pick.l,function(v){
+    if(v==='C')return false;return !semuaTipe().some(function(t){return (pick.b==='C'||CORE.BG_TIPE[t]===pick.b)&&CORE.levels(t).indexOf(v)>=0;});})+'</div>';
+  var daftar=calonTipe();
+  h+='<div class="lvl"><label for="pilihTipe"><b>Tipe soal</b></label><select id="pilihTipe" class="pilih-tipe" data-aksi="tipe"><option value="C"'+(pick.t==='C'?' selected':'')+'>Acak dari '+daftar.length+' tipe</option>'
+    +daftar.map(function(t){return '<option value="'+t+'"'+(pick.t===t?' selected':'')+'>Tipe '+t+' · '+esc(CORE.TIPE[t])+' ('+CORE.levels(t).map(function(l){return CORE.LEVEL[l];}).join('/')+')</option>';}).join('')+'</select></div>';
+  h+='<div class="row"><button class="btn" data-aksi="acak">🎲 Soal acak</button></div>';
+  h+='<div class="note"><p>Soal di atas termasuk <b>'+esc(Q.jd+' · '+Q.lv)+'</b> dengan kata kerja <i>'+esc(Q.kko)+'</i>.</p><p>Di Latihan kamu boleh mencoba berulang kali, membuka 💡 Petunjuk, dan memakai 📍 Di mana salahku?</p></div>';
+  h+='<div class="row"><button class="btn primary" data-aksi="mulai">Mulai ➜</button></div>';
+  L.el.panel.innerHTML=h;
+}
+function panelSelesai(){
+  L.el.panel.innerHTML='<h2>🎉 Soal selesai</h2><h3>Pembahasan</h3><ol class="sum">'+L.S.Q.bahas.map(function(b){return '<li>'+esc(b)+'</li>';}).join('')+'</ol>'
+    +'<div class="row"><button class="btn primary" data-aksi="acak">Soal berikutnya ➜</button><button class="btn" data-aksi="ulangi">↺ Ulangi soal ini</button><button class="btn ghost" data-aksi="ke-kuis">Kuis ➜</button></div>';
+  if(PL.Math)PL.Math.render(L.el.panel);
+}
+/* ---------- Penyelesaian bertahap ----------
+   Setelah jawaban benar atau 🔑 Lihat jawaban, langkah yang memerlukan perhitungan ditampilkan
+   lengkap. Isinya dari js/penyelesaian.js (PL.Penyelesaian), bila dimuat. */
+function tampilPenyelesaian(){
+  var pn=L.el.panel,lama=pn.querySelector('.penyelesaian');if(lama)lama.remove();
+  if(!PL.Penyelesaian)return;
+  var bl;try{bl=PL.Penyelesaian.langkah(L.S.Q,L.S.s);}catch(err){if(window.console)console.warn('penyelesaian',err);return;}
+  if(!bl||!bl.length)return;
+  var fb=pn.querySelector('.fb');if(!fb)return;
+  fb.insertAdjacentHTML('afterend',PL.Penyelesaian.html(bl));
+  var box=pn.querySelector('.penyelesaian');if(box&&PL.Math)PL.Math.render(box);
+}
+function periksa(a,r){
+  var S=L.S,akhir=S.s>=S.Q.st.length-1;
+  if(r.ok){
+    S.solved=true;L.tandai(r);L.kunciSemua();
+    var hh=L.el.panel.querySelector('.hints');if(hh)hh.hidden=true;
+    L.fb('ok','Tepat! '+(akhir?'Soal ini selesai.':'Lanjut ke langkah berikutnya.'));
+    tampilPenyelesaian();
+    PL.Plus.say(akhir?'selesai':'benar');
+    L.tombol('<button class="btn primary" data-aksi="lanjut">'+(akhir?'Lihat pembahasan ➜':'Langkah berikutnya ➜')+'</button>');
+    L.renderBidang();L.renderProgres();
+  }else{
+    S.tries++;L.tandai(r);S.lw={a:a,r:r};
+    var St=L.curS(),sebagian=St.k==='form'&&r.items.some(Boolean)&&r.items.length>1;
+    L.fb('bad','Belum tepat. '+(sebagian?'Isian yang hijau sudah benar. ':'')+(St.k==='pts'&&r.lebih&&!r.lebih.length?'Titik pilihanmu benar, tetapi masih kurang. ':'')+'Baca petunjuk, lalu coba lagi.');
+    if(S.hints<2)L.tambahPetunjuk(false);else L.renderHints();
+    L.tombolDiMana();
+    if(S.tries>=2&&!L.el.panel.querySelector('[data-aksi="kunci"]'))L.tambahTombol('<button class="btn ghost" data-aksi="kunci">🔑 Lihat jawaban</button>');
+    PL.Plus.say('salah');
+  }
+}
+function lihatKunci(){
+  var S=L.S,akhir=S.s>=S.Q.st.length-1;L.isiKunci();S.solved=true;L.panelLangkah();L.kunciSemua();
+  L.bukaSemuaPetunjuk();
+  L.fb('info','🔑 Jawaban yang benar: <b>'+L.teksKunci()+'</b>. Pelajari, lalu lanjutkan.');
+  tampilPenyelesaian();
+  L.tombol('<button class="btn primary" data-aksi="lanjut">'+(akhir?'Lihat pembahasan ➜':'Langkah berikutnya ➜')+'</button>');L.renderBidang();
+}
+function lanjut(){var S=L.S;if(S.s<S.Q.st.length-1){S.s++;L.reset();render();}else{tahap='selesai';render();PL.Plus.say('selesai');}}
+function aksi(a,b){
+  if(a==='bagian'){pick.b=b.dataset.v;pick.t='C';if(!calonTipe().length)pick.l='C';soalBaru();}
+  else if(a==='level'){pick.l=b.dataset.v;pick.t='C';soalBaru();}
+  else if(a==='acak')soalBaru();
+  else if(a==='mulai'){tahap='kerja';L.S.s=0;L.reset();render();PL.Plus.say('sapa');}
+  else if(a==='lanjut')lanjut();
+  else if(a==='kunci')lihatKunci();
+  else if(a==='ulangi'){tahap='kerja';L.S.selesai=false;L.S.s=0;L.reset();render();}
+  else if(a==='ke-kuis')PL.pindahTab('kuis');
+}
+PL.TAB=PL.TAB||{};
+PL.TAB.latihan={
+  init:function(){
+    sec=$('#tab-latihan');
+    L=PL.Langkah(sec,{petunjuk:true,diManaSalah:true,pratinjau:true,ubahPetunjuk:namaRumus,petunjukLanjut:petunjukLanjut,gerbangPetunjuk:GERBANG_PETUNJUK,periksa:periksa,aksi:aksi,
+      meta:function(){var Q=L.S.Q;return esc(Q.jd+' · '+Q.lv);}});
+    this.bidang=L.bidang;this.panduan=L.panduan;this.L=L;
+    /* pemilih tipe (select) */
+    L.el.panel.addEventListener('change',function(e){if(e.target.id==='pilihTipe'){var v=e.target.value;pick.t=v==='C'?'C':+v;soalBaru();}});
+    /* tombol di kartu soal (di luar panel) */
+    sec.querySelector('.kartu').addEventListener('click',function(e){
+      var b=e.target.closest('[data-aksi]');if(!b)return;
+      if(b.dataset.aksi==='ulangi'&&tahap!=='intro')aksi('ulangi');
+      else if(b.dataset.aksi==='acak')soalBaru();
+    });
+    soalBaru();
+  },
+  tampil:function(){render();},
+  sembunyi:function(){return true;}
+};
+})(window.PL);
+
+</script>
+<script>
+/* ==========================================================================
+   main.js · PENGATUR TAB
+   Dipakai oleh DUA halaman:
+     index.html  → tab Belajar + Latihan Mandiri
+     kuis.html   → tab Kuis saja
+   Setiap tab terdaftar di PL.TAB dengan siklus hidup yang sama:
+     init()      sekali saat halaman dimuat
+     tampil()    setiap kali tab dibuka
+     sembunyi()  sebelum tab ditinggalkan; kembalikan false untuk membatalkan
+     jaga()      (opsional) true = peringatkan sebelum halaman ditutup
+   Mode aktif ditulis di <body data-mode="belajar|latihan|kuis"> sehingga
+   perbedaan tampilan antarmode cukup diatur di CSS (lapisan "mode").
+   Bila tombol meminta tab yang tidak ada di halaman ini, peramban
+   diarahkan ke halaman yang memuatnya (lihat HALAMAN).
+   ========================================================================== */
+(function(PL){
+'use strict';
+var HALAMAN={belajar:'index.html',latihan:'index.html#latihan',kuis:'kuis.html'};
+var aktif=null,pergi=false;
+PL.TAB=PL.TAB||{};
+PL.pindahTab=function(nama){
+  if(nama===aktif)return;
+  var lama=PL.TAB[aktif];
+  if(lama&&lama.sembunyi()===false)return;
+  if(!PL.TAB[nama]){                       /* tab ada di halaman lain */
+    if(HALAMAN[nama]){pergi=true;location.href=HALAMAN[nama];}
+    return;
+  }
+  PL.U.$$('.tab-view').forEach(function(v){v.hidden=v.dataset.tab!==nama;});
+  PL.U.$$('[role="tab"]').forEach(function(t){var on=t.dataset.tab===nama;t.classList.toggle('on',on);t.setAttribute('aria-selected',on?'true':'false');});
+  document.body.dataset.mode=nama;
+  aktif=nama;
+  try{history.replaceState(null,'',nama===awal?location.pathname+location.search:'#'+nama);}catch(_){}
+  PL.Plus.home();
+  PL.Plus.bidang=PL.TAB[nama].bidang||null;
+  PL.Plus.panduan=PL.TAB[nama].panduan||null;
+  PL.TAB[nama].tampil();
+  if(PL.barSync)PL.barSync();
+};
+PL.U.$$('[role="tab"]').forEach(function(t){t.addEventListener('click',function(){PL.pindahTab(t.dataset.tab);});});
+window.addEventListener('beforeunload',function(e){
+  if(pergi){pergi=false;return;}           /* sudah dikonfirmasi lewat sembunyi() */
+  var j=Object.keys(PL.TAB).some(function(k){return PL.TAB[k].jaga&&PL.TAB[k].jaga();});
+  if(j){e.preventDefault();e.returnValue='';}
+});
+Object.keys(PL.TAB).forEach(function(k){PL.TAB[k].init();});
+window.__api={CORE:CORE,PL:PL};   /* untuk pemeriksaan di konsol: __api.CORE.cek() */
+/* tab pertama yang terdaftar di halaman ini; index.html#latihan membuka Latihan Mandiri */
+var awal=Object.keys(PL.TAB)[0],minta=(location.hash||'').slice(1);
+PL.pindahTab(PL.TAB[minta]?minta:awal);
+})(window.PL);
+
+</script>
+</body>
+</html>
